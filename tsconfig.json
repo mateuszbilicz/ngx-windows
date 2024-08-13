@@ -10,6 +10,11 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
+    "paths": {
+      "ngx-windows": [
+        "./dist/ngx-windows"
+      ]
+    },
     "esModuleInterop": true,
     "sourceMap": true,
     "declaration": false,
