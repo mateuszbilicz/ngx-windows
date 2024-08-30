@@ -1,0 +1,42 @@
+app-close-confirm-dialog {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: .5rem;
+
+  h3 {
+    padding: 0;
+    margin: 0;
+  }
+
+  div {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: .5rem;
+    width: 100%;
+
+    button {
+      padding: .5rem;
+      font-size: 1rem;
+      color: white;
+      background: #9a0000;
+      border-radius: .5rem;
+      border: none;
+      font-weight: bolder;
+      cursor: pointer;
+
+      &:hover {
+        background: #bc0000;
+      }
+
+      &.secondary {
+        background: transparent;
+        color: #373737;
+
+        &:hover {
+          background: rgba(62, 62, 62, 0.11);
+        }
+      }
+    }
+  }
+}

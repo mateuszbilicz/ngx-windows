@@ -1,0 +1,14 @@
+@if (windowController()) {
+  <h3>
+    Are you sure that you want to close this window?
+  </h3>
+  <div>
+    <button class="secondary"
+            (click)="cancel()">
+      No
+    </button>
+    <button (click)="confirm()">
+      Yes
+    </button>
+  </div>
+}

@@ -12,7 +12,7 @@
     "skipLibCheck": true,
     "paths": {
       "ngx-windows": [
-        "./dist/ngx-windows"
+        "./projects/ngx-windows"
       ]
     },
     "esModuleInterop": true,

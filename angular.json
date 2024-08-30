@@ -102,7 +102,7 @@
       "projectType": "library",
       "root": "projects/ngx-windows",
       "sourceRoot": "projects/ngx-windows/src",
-      "prefix": "lib",
+      "prefix": "ngw",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
