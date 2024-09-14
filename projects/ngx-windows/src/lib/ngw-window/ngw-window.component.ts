@@ -3,8 +3,8 @@ import {
   Component, DestroyRef,
   ElementRef,
   HostBinding,
-  HostListener,
-  Input,
+  HostListener, input,
+  Input, signal,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -37,34 +37,36 @@ import {NgwWindowControllerService} from "../ngw-window-controller.service";
 })
 export class NgwWindowComponent
   implements AfterViewInit {
-  @Input() properties!: NgwWindowProperties;
+  properties = input.required<NgwWindowProperties>();
+  initialized = signal<boolean>(false);
   private isResizing = false;
   private isMoving = false;
   private mouseMoveListener: Subscription | undefined;
   private isOverResizingPoint: boolean = false;
   topbar?: ElementRef;
+
   @ViewChild('_topbar') set __topbar(e: ElementRef) {
     if (e) this.topbar = e;
-  };
+  }
 
   @HostBinding('class.minimized') get isMinimized() {
-    return this.properties.state.minimized;
+    return this.properties().state.minimized;
   }
 
   @HostBinding('class.maximized') get isMaximized() {
-    return this.properties.state.maximized;
+    return this.properties().state.maximized;
   }
 
   @HostBinding('class.focused') get isFocused() {
-    return this.properties.state.focused;
+    return this.properties().state.focused;
   }
 
   @HostBinding('class.locked') get isLocked() {
-    return this.properties.state.locked;
+    return this.properties().state.locked;
   }
 
   @HostBinding('class.fullscreen') get isFullScreen() {
-    return this.properties.placementMode == 'fullScreen';
+    return this.properties().placementMode == 'fullScreen';
   }
 
   @HostBinding('class.over-resizing-point') get canResize() {
@@ -72,19 +74,19 @@ export class NgwWindowComponent
   }
 
   @HostBinding('style.width') get width() {
-    return this.properties.placement.width + 'px';
+    return this.properties().placement.width + 'px';
   }
 
   @HostBinding('style.height') get height() {
-    return this.properties.placement.height + 'px';
+    return this.properties().placement.height + 'px';
   }
 
   @HostBinding('style.left') get left() {
-    return this.properties.placement.offsetX + 'px';
+    return this.properties().placement.offsetX + 'px';
   }
 
   @HostBinding('style.top') get top() {
-    return this.properties.placement.offsetY + 'px';
+    return this.properties().placement.offsetY + 'px';
   }
 
   @HostBinding('class.resizing') get resizing() {
@@ -96,28 +98,28 @@ export class NgwWindowComponent
   }
 
   @HostBinding('class.borderless') get isBorderless() {
-    return this.properties.configuration?.borderless;
+    return this.properties().configuration?.borderless;
   }
 
   @HostBinding('class.noshadow') get hasNoShadow() {
-    return this.properties.configuration?.noShadow;
+    return this.properties().configuration?.noShadow;
   }
 
   @HostBinding('class.transparent') get isTransparent() {
-    return this.properties.configuration?.transparent;
+    return this.properties().configuration?.transparent;
   }
 
   @HostBinding('style.background') get background() {
-    return this.properties.configuration?.background;
+    return this.properties().configuration?.background;
   }
 
   @HostBinding('style.backdrop-filter') get backdropFilter() {
-    return this.properties.configuration?.backdropFilter;
+    return this.properties().configuration?.backdropFilter;
   }
 
   @HostListener('click') activate() {
-    if (this.isFocused) return;
-    this.nwm.activateWindow(this.properties.id);
+    if (this.isFocused || this.isLocked) return;
+    this.nwm.activateWindow(this.properties().id);
   }
 
   constructor(public nwm: NgwWindowsManagerService,
@@ -128,11 +130,11 @@ export class NgwWindowComponent
   }
 
   private get placementDistanceTolerance() {
-    return this.properties.configuration?.placementDistanceTolerance ?? 64;
+    return this.properties().configuration?.placementDistanceTolerance ?? 64;
   }
 
   private get resizeDistanceTolerance() {
-    return this.properties.configuration?.resizeDistanceTolerance ?? 12;
+    return this.properties().configuration?.resizeDistanceTolerance ?? 12;
   }
 
   ngAfterViewInit() {
@@ -147,26 +149,26 @@ export class NgwWindowComponent
           if (ev.target.closest('ngw-icon')) return;
           if (
             this.isLocked
-            || !this.properties.placementMode == undefined
+            || !this.properties().placementMode == undefined
           ) return;
           this.activate();
-          this.isResizing = !!this.properties.configuration?.resizeable
+          this.isResizing = !!this.properties().configuration?.resizeable
             && distance2D(
               ev.clientX,
               ev.clientY,
-              this.properties.placement.width + this.properties.placement.offsetX,
-              this.properties.placement.height + this.properties.placement.offsetY
+              this.properties().placement.width + this.properties().placement.offsetX,
+              this.properties().placement.height + this.properties().placement.offsetY
             ) < this.resizeDistanceTolerance;
-          const startX = ev.clientX - this.properties.placement.offsetX,
-            startY = ev.clientY - this.properties.placement.offsetY;
+          const startX = ev.clientX - this.properties().placement.offsetX,
+            startY = ev.clientY - this.properties().placement.offsetY;
           if (this.isResizing) {
             this.mouseMoveListener = this.activateResizeEvent();
             this.activateMouseUpEvent(startX, startY);
             return;
           }
           if (!this.topbar?.nativeElement) return;
-          this.isMoving = !!this.properties.configuration?.moveable
-            && (ev.clientY < this.properties.placement.offsetY + this.topbar.nativeElement.clientHeight);
+          this.isMoving = !!this.properties().configuration?.moveable
+            && (ev.clientY < this.properties().placement.offsetY + this.topbar.nativeElement.clientHeight);
           if (this.isMoving) {
             this.mouseMoveListener = this.activateMoveEvent(startX, startY);
             this.activateMouseUpEvent(startX, startY);
@@ -181,15 +183,16 @@ export class NgwWindowComponent
       .subscribe({
         next: (ev: any) => {
           ev = ev as MouseEvent;
-          this.isOverResizingPoint = !!this.properties.configuration?.resizeable
+          this.isOverResizingPoint = !!this.properties().configuration?.resizeable
             && distance2D(
               ev.clientX,
               ev.clientY,
-              this.properties.placement.width + this.properties.placement.offsetX,
-              this.properties.placement.height + this.properties.placement.offsetY
+              this.properties().placement.width + this.properties().placement.offsetX,
+              this.properties().placement.height + this.properties().placement.offsetY
             ) < this.resizeDistanceTolerance;
         }
       });
+    this.initialized.set(true);
   }
 
   private activateMoveEvent(startX: number, startY: number) {
@@ -202,13 +205,13 @@ export class NgwWindowComponent
         next: (ev: any) => {
           ev = ev as MouseEvent;
           moveNgwWindow(
-            this.properties,
+            this.properties(),
             ev.clientX - startX,
             ev.clientY - startY,
             window.innerWidth,
             window.innerHeight
           );
-          if (this.properties.configuration?.allowPlacementAlignment) {
+          if (this.properties().configuration?.allowPlacementAlignment) {
             const placementMode = getWindowPlacement(
               ev.clientX,
               ev.clientY,
@@ -235,9 +238,9 @@ export class NgwWindowComponent
         next: (ev: any) => {
           ev = ev as MouseEvent;
           resizeNgwWindow(
-            this.properties,
-            ev.clientX - this.properties.placement.offsetX,
-            ev.clientY - this.properties.placement.offsetY,
+            this.properties(),
+            ev.clientX - this.properties().placement.offsetX,
+            ev.clientY - this.properties().placement.offsetY,
             window.innerWidth,
             window.innerHeight
           );
@@ -268,9 +271,9 @@ export class NgwWindowComponent
           this.isResizing = false;
           if (this.isMoving) {
             this.isMoving = false;
-            if (this.properties.configuration?.allowPlacementAlignment) {
+            if (this.properties().configuration?.allowPlacementAlignment) {
               doNgwWindowPlacementIfPossible(
-                this.properties,
+                this.properties(),
                 ev.clientX,
                 ev.clientY,
                 window.innerWidth,
@@ -285,24 +288,31 @@ export class NgwWindowComponent
       });
   }
 
-  getContentHeight(topbar: ElementRef<any>): string {
-    return (this.properties.placement.height - topbar.nativeElement.clientHeight) + 'px';
+  get getContentHeight(): string {
+    if (this.topbar?.nativeElement) {
+      return (this.properties().placement.height - this.topbar.nativeElement.clientHeight) + 'px'
+    }
+    return this.height;
   }
 
   minimize() {
-    this.properties.state.minimized = true;
+    this.properties().state.minimized = true;
   }
 
   toggleMaximize() {
-    this.properties.state.maximized = !this.properties.state.maximized;
+    this.properties().state.maximized = !this.properties().state.maximized;
+  }
+
+  setLocked(locked: boolean) {
+    this.properties().state.locked = locked;
   }
 
   close(ev: MouseEvent) {
-    if (this.properties.configuration?.preventClose) {
+    if (this.properties().configuration?.preventClose) {
       this.windowControllerService.onClose$.next(ev);
       return;
     }
-    this.nwm.removeWindow(this.properties.id);
+    this.nwm.removeWindow(this.properties().id);
   }
 
 }

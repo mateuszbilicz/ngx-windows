@@ -13,7 +13,7 @@ export class TestAppComponent {
 
   constructor() {
     effect(() => {
-      let config = this.windowController().instance!.properties.configuration!;
+      let config = this.windowController().instance!.properties().configuration!;
       config.transparent = true;
       config.background = 'rgba(235, 235, 235, .75)';
       config.backdropFilter = 'blur(2px)';

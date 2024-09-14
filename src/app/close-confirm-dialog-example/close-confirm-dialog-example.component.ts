@@ -26,7 +26,7 @@ export class CloseConfirmDialogExampleComponent {
               private destroyRef: DestroyRef) {
     effect(() => {
       const winC = this.windowController();
-      winC.instance!.properties.configuration!.preventClose = true;
+      winC.instance!.properties().configuration!.preventClose = true;
       winC.onClose$
         .pipe(
           takeUntilDestroyed(this.destroyRef),
@@ -49,7 +49,7 @@ export class CloseConfirmDialogExampleComponent {
     effect(() => {
       if (this.confirmClose()) {
         if (this.closeConfirmWindowId()) this.nwm.removeWindow(this.closeConfirmWindowId()!);
-        this.nwm.removeWindow(this.windowController().instance!.properties.id);
+        this.nwm.removeWindow(this.windowController().instance!.properties().id);
       }
     });
   }
@@ -77,7 +77,13 @@ export class CloseConfirmDialogExampleComponent {
         state: {},
         name: 'Close window?',
         inputs: {
-          confirmClose: this.confirmClose
+          confirmClose: this.confirmClose,
+          lockParent: () => {
+            this.windowController().instance!.setLocked(true);
+          },
+          unlockParent: () => {
+            this.windowController().instance!.setLocked(false);
+          }
         }
       }
     );
