@@ -18,6 +18,13 @@ export class NgwWindowConfigurationService {
     });
   }
 
+  appendProperties(properties: Partial<NgwWindowConfiguration>) {
+    this.displayProperties.set({
+      ...this.displayProperties(),
+      ...properties
+    });
+  }
+
   displayName = computed(() => this.displayProperties().displayName ?? true);
   showLeftControls = computed(() => this.displayProperties().showLeftControls ?? false);
   showRightControls = computed(() => this.displayProperties().showRightControls ?? true);

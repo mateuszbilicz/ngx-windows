@@ -17,7 +17,7 @@
         <ng-container *ngTemplateOutlet="windowControllerService.windowNameTemplate"/>
       } @else {
         <span class="ngw-window-title">
-        {{ properties().name }}
+        {{ windowControllerService.name() }}
       </span>
       }
     }
@@ -28,15 +28,15 @@
         }
         @if (configurationSvc.minimizable()) {
           <ngw-icon type="minimize"
-                    (click)="minimize()"/>
+                    (click)="windowControllerService.minimize()"/>
         }
         @if (configurationSvc.maximizable()) {
           <ngw-icon [type]="stateSvc.maximized() ? 'restore' : 'maximize'"
-                    (click)="toggleMaximize()"/>
+                    (click)="windowControllerService.toggleMaximize()"/>
         }
         @if (configurationSvc.closeable()) {
           <ngw-icon type="close"
-                    (click)="close($event)"/>
+                    (click)="windowControllerService.close($event)"/>
         }
       </div>
     }
@@ -48,8 +48,8 @@
         maxWidth: placementSvc.width() + 'px',
         maxHeight: getContentHeight
      }">
-    @if (properties().component) {
-      <ng-container [ngComponentOutlet]="properties().component"
+    @if (windowControllerService.component()) {
+      <ng-container [ngComponentOutlet]="windowControllerService.component()"
                     [ngComponentOutletInputs]="{windowController: windowControllerService}"/>
     }
   </div>

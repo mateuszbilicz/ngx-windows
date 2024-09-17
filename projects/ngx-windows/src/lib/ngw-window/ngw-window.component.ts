@@ -1,27 +1,24 @@
 import {
   AfterViewInit,
-  Component, DestroyRef,
+  Component, DestroyRef, effect,
   ElementRef,
   HostBinding,
   HostListener, inject, input,
-  Input, signal,
+  signal,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {NgwWindowProperties} from "../models/ngw-window-properties.model";
 import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 import {IconComponent} from "../icon/icon.component";
 import {NgwWindowsManagerService} from "../ngw-windows-manager.service";
-import {distance2D} from "../api/ngw-window-util";
-import {moveNgwWindow, doNgwWindowPlacementIfPossible, resizeNgwWindow} from "../api/ngw-windows.api";
 import {fromEvent, ReplaySubject, Subscription, takeUntil, throttleTime} from "rxjs";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {getWindowPlacement} from "../api/ngw-window-placement.api";
 import {WindowPlacements} from "../models/placement.model";
 import {NgwWindowControllerService} from "./services/ngw-window-controller.service";
 import {NgwWindowPlacementService} from "./services/ngw-window-placement.service";
 import {NgwWindowStateService} from "./services/ngw-window-state.service";
 import {NgwWindowConfigurationService} from "./services/ngw-window-configuration.service";
+import {NgwWindowProps} from "../models/ngw-window-properties.model";
 
 @Component({
   selector: 'ngw-window',
@@ -43,7 +40,7 @@ import {NgwWindowConfigurationService} from "./services/ngw-window-configuration
 })
 export class NgwWindowComponent
   implements AfterViewInit {
-  properties = input.required<NgwWindowProperties>();
+  properties = input.required<NgwWindowProps>();
   initialized = signal<boolean>(false);
   private isResizing = false;
   private isMoving = false;
@@ -128,22 +125,27 @@ export class NgwWindowComponent
 
   @HostListener('click') activate() {
     if (this.stateSvc.focused() || this.stateSvc.locked()) return;
-    this.nwm.activateWindow(this.properties().id);
+    this.nwm.activateWindow(this.windowControllerService.id());
   }
 
   constructor(public nwm: NgwWindowsManagerService,
               private el: ElementRef,
               private destroyRef: DestroyRef,
               public windowControllerService: NgwWindowControllerService) {
-    this.windowControllerService.instance = this;
-  }
-
-  private get placementDistanceTolerance() {
-    return this.configurationSvc.placementDistanceTolerance() ?? 64;
-  }
-
-  private get resizeDistanceTolerance() {
-    return this.configurationSvc.resizeDistanceTolerance() ?? 12;
+    effect(() => {
+      this.windowControllerService.properties.set(
+        this.properties()
+      );
+    }, {allowSignalWrites: true});
+    effect(() => {
+      const id = this.windowControllerService.id();
+      this.initialized.set(
+        !!id
+      );
+      if (id) {
+        this.nwm.registerWindow(id, this.windowControllerService);
+      }
+    }, {allowSignalWrites: true});
   }
 
   ngAfterViewInit() {
@@ -162,17 +164,12 @@ export class NgwWindowComponent
           ) return;
           this.activate();
           this.isResizing = this.configurationSvc.resizeable()
-            && distance2D(
-              ev.clientX,
-              ev.clientY,
-              this.placementSvc.width() + this.placementSvc.offsetX(),
-              this.placementSvc.height() + this.placementSvc.offsetY()
-            ) < this.resizeDistanceTolerance;
+            && this.windowControllerService.isOverResizingPoint(ev.clientX, ev.clientY);
           const startX = ev.clientX - this.placementSvc.offsetX(),
             startY = ev.clientY - this.placementSvc.offsetY();
           if (this.isResizing) {
             this.mouseMoveListener = this.activateResizeEvent();
-            this.activateMouseUpEvent(startX, startY);
+            this.activateMouseUpEvent();
             return;
           }
           if (!this.topbar?.nativeElement) return;
@@ -180,7 +177,7 @@ export class NgwWindowComponent
             && (ev.clientY < this.placementSvc.offsetY() + this.topbar.nativeElement.clientHeight);
           if (this.isMoving) {
             this.mouseMoveListener = this.activateMoveEvent(startX, startY);
-            this.activateMouseUpEvent(startX, startY);
+            this.activateMouseUpEvent();
           }
         }
       })
@@ -193,15 +190,9 @@ export class NgwWindowComponent
         next: (ev: any) => {
           ev = ev as MouseEvent;
           this.isOverResizingPoint = this.configurationSvc.resizeable()
-            && distance2D(
-              ev.clientX,
-              ev.clientY,
-              this.placementSvc.width() + this.placementSvc.offsetX(),
-              this.placementSvc.height() + this.placementSvc.offsetY()
-            ) < this.resizeDistanceTolerance;
+            && this.windowControllerService.isOverResizingPoint(ev.clientX, ev.clientY);
         }
       });
-    this.initialized.set(true);
   }
 
   private activateMoveEvent(startX: number, startY: number) {
@@ -213,20 +204,14 @@ export class NgwWindowComponent
       .subscribe({
         next: (ev: any) => {
           ev = ev as MouseEvent;
-          moveNgwWindow(
-            this.properties(),
+          this.windowControllerService.moveWindow(
             ev.clientX - startX,
-            ev.clientY - startY,
-            window.innerWidth,
-            window.innerHeight
+            ev.clientY - startY
           );
           if (this.configurationSvc.allowPlacementAlignment()) {
-            const placementMode = getWindowPlacement(
+            const placementMode = this.windowControllerService.getPlacementMode(
               ev.clientX,
-              ev.clientY,
-              window.innerWidth,
-              window.innerHeight,
-              this.placementDistanceTolerance
+              ev.clientY
             );
             this.nwm.onPlacementPrediction((placementMode && WindowPlacements[placementMode]) ?? undefined);
           }
@@ -246,12 +231,9 @@ export class NgwWindowComponent
       .subscribe({
         next: (ev: any) => {
           ev = ev as MouseEvent;
-          resizeNgwWindow(
-            this.properties(),
+          this.windowControllerService.resizeWindow(
             ev.clientX - this.placementSvc.offsetX(),
-            ev.clientY - this.placementSvc.offsetY(),
-            window.innerWidth,
-            window.innerHeight
+            ev.clientY - this.placementSvc.offsetY()
           );
           ev.preventDefault();
           ev.stopPropagation();
@@ -260,7 +242,7 @@ export class NgwWindowComponent
       });
   }
 
-  private activateMouseUpEvent(startX: number, startY: number) {
+  private activateMouseUpEvent() {
     let stop = new ReplaySubject<boolean>(1),
       doStop = () => {
         stop.next(true);
@@ -281,13 +263,9 @@ export class NgwWindowComponent
           if (this.isMoving) {
             this.isMoving = false;
             if (this.configurationSvc.allowPlacementAlignment()) {
-              doNgwWindowPlacementIfPossible(
-                this.properties(),
+              this.windowControllerService.doNgwWindowPlacementIfPossible(
                 ev.clientX,
-                ev.clientY,
-                window.innerWidth,
-                window.innerHeight,
-                this.placementDistanceTolerance
+                ev.clientY
               );
             }
           }
@@ -303,25 +281,4 @@ export class NgwWindowComponent
     }
     return this.height;
   }
-
-  minimize() {
-    this.stateSvc.minimized.set(true);
-  }
-
-  toggleMaximize() {
-    this.stateSvc.maximized.set(!this.stateSvc.maximized());
-  }
-
-  setLocked(locked: boolean) {
-    this.stateSvc.locked.set(locked);
-  }
-
-  close(ev: MouseEvent) {
-    if (this.configurationSvc.preventClose()) {
-      this.windowControllerService.onClose$.next(ev);
-      return;
-    }
-    this.nwm.removeWindow(this.properties().id);
-  }
-
 }

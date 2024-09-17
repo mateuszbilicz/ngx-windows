@@ -1,11 +1,5 @@
-import {NgwWindowPlacement, WindowPlacementsKeyName} from "./placement.model";
-
-export interface NgwWindowPlacementLimits {
-  minWidth?: number;
-  minHeight?: number;
-  maxWidth?: number;
-  maxHeight?: number;
-}
+import {NgwWindowControllerService} from "../ngw-window/services/ngw-window-controller.service";
+import {Subject} from "rxjs";
 
 export interface NgwWindowConfiguration {
   displayName?: boolean;
@@ -30,33 +24,22 @@ export interface NgwWindowConfiguration {
   resizeable?: boolean;
 }
 
-export interface NgwWindowState {
-  maximized?: boolean;
-  minimized?: boolean;
-  focused?: boolean;
-  locked?: boolean;
-}
-
-export interface NgwWindowPropertiesWithoutId {
+export interface NgwWindowPropsWithoutId {
   name: string;
-  placementMode: WindowPlacementsKeyName | undefined;
-  placement: NgwWindowPlacement;
-  placementLimits?: NgwWindowPlacementLimits;
-  configuration?: NgwWindowConfiguration;
-  state: NgwWindowState;
-  component?: any;
-  inputs?: any;
+  component: any;
 }
 
-export interface NgwWindowProperties {
+export interface NgwWindowProps
+  extends NgwWindowPropsWithoutId {
   id: string;
-  name: string;
-  placementMode: WindowPlacementsKeyName | undefined;
-  placement: NgwWindowPlacement;
-  placementLimits?: NgwWindowPlacementLimits;
-  placementBeforeAuto?: NgwWindowPlacement;
-  configuration?: NgwWindowConfiguration;
-  state: NgwWindowState;
-  component?: any;
-  inputs?: any;
+}
+
+export interface NgwWindowPropsWithService
+  extends NgwWindowProps {
+  service: NgwWindowControllerService | undefined;
+}
+
+export interface ActiveNgwWindowProps
+  extends NgwWindowPropsWithService {
+  onRegister$: Subject<NgwWindowControllerService>;
 }

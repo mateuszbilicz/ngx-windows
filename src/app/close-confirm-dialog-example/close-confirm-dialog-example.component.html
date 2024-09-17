@@ -1,4 +1,4 @@
-<input id="{{windowController().instance!.properties().id}}-close-locked"
+<input id="{{windowController().id()}}-close-locked"
        type="checkbox"
        [checked]="closeLocked()"
        (change)="closeLocked.set(!closeLocked())"

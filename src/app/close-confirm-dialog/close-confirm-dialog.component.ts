@@ -1,6 +1,6 @@
 import {Component, input, OnInit, ViewEncapsulation} from '@angular/core';
-import {NgwWindowControllerService} from "../../../projects/ngx-windows/src/lib/ngw-window-controller.service";
 import {NgwWindowsManagerService} from "../../../projects/ngx-windows/src/lib/ngw-windows-manager.service";
+import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
 
 @Component({
   selector: 'app-close-confirm-dialog',
@@ -17,15 +17,15 @@ export class CloseConfirmDialogComponent
   constructor(private nwm: NgwWindowsManagerService) {}
 
   ngOnInit() {
-    this.windowController().instance!.properties().inputs!.lockParent();
+    this.windowController().data().lockParent();
   }
 
   cancel() {
-    this.windowController().instance!.properties().inputs!.unlockParent();
-    this.nwm.removeWindow(this.windowController().instance!.properties().id);
+    this.windowController().data()!.unlockParent();
+    this.nwm.removeWindow(this.windowController().id());
   }
 
   confirm() {
-    this.windowController().instance!.properties().inputs!.confirmClose.set(true);
+    this.windowController().data().confirmClose.set(true);
   }
 }

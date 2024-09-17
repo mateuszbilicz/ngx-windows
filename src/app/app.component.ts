@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, DestroyRef} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
 import {NgwWindowsManagerService} from "../../projects/ngx-windows/src/lib/ngw-windows-manager.service";
 import {
   NgwWindowsContainerComponent
@@ -8,6 +8,7 @@ import {TestAppComponent} from "./test-app/test-app.component";
 import {
   CloseConfirmDialogExampleComponent
 } from "./close-confirm-dialog-example/close-confirm-dialog-example.component";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-root',
@@ -20,31 +21,38 @@ import {
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  constructor(public nwm: NgwWindowsManagerService) {
-    this.nwm.createWindow(TestAppComponent, {
+  constructor(public nwm: NgwWindowsManagerService,
+              private destroyRef: DestroyRef) {
+    const win = this.nwm.createWindow({
       name: 'Test Window',
-      placementMode: undefined,
-      placement: {
-        width: 800,
-        height: 600,
-        offsetX: 30,
-        offsetY: 30
-      },
-      state: {}
+      component: TestAppComponent
+    });
+    win.onRegister$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(service => {
+      service.placementSvc.setAll(
+        800,
+        600,
+        30,
+        30
+      );
     });
   }
 
   addWindowWithCloseDialog() {
-    this.nwm.createWindow(CloseConfirmDialogExampleComponent, {
+    const win = this.nwm.createWindow({
       name: 'Close confirm example',
-      placementMode: undefined,
-      placement: {
-        width: 800,
-        height: 600,
-        offsetX: 30,
-        offsetY: 30
-      },
-      state: {}
+      component: CloseConfirmDialogExampleComponent
     });
+    win.onRegister$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(service => {
+        service.placementSvc.setAll(
+          800,
+          600,
+          30,
+          30
+        );
+      });
   }
 }

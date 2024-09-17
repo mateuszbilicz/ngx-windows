@@ -1,117 +1,137 @@
-import {NgwWindowProperties} from "../models/ngw-window-properties.model";
+import {NgwWindowConfiguration, NgwWindowProps} from "../models/ngw-window-properties.model";
 import {getWindowPlacement} from "./ngw-window-placement.api";
-import {NgwWindowPlacement, WindowPlacements} from "../models/placement.model";
+import {NgwWindowBasicPlacement, NgwWindowPlacement, WindowPlacements} from "../models/placement.model";
+import {NgwWindowPlacementService} from "../ngw-window/services/ngw-window-placement.service";
+import {NgwWindowStateService} from "../ngw-window/services/ngw-window-state.service";
+import {NgwWindowConfigurationService} from "../ngw-window/services/ngw-window-configuration.service";
 
-export const createNgwWindowPropertiesDefaults = (): NgwWindowProperties => {
-  const randomOffset = 8 + Math.floor(Math.random() * 24);
+export const NgwWindowDefaultPlacement: NgwWindowBasicPlacement = {
+  offsetX: 30,
+  offsetY: 30,
+  width: 50,
+  height: 50
+}
+
+export const NgwWindowDefaultConfiguration: NgwWindowConfiguration = {
+  displayName: true,
+  showLeftControls: false,
+  showRightControls: true,
+  maximizable: true,
+  minimizable: true,
+  closeable: true,
+  showTopBar: true,
+  placementDistanceTolerance: 64,
+  resizeDistanceTolerance: 12,
+  allowOutboundMovements: true,
+  allowPlacementAlignment: true,
+  moveable: true,
+  resizeable: true
+}
+
+export const createNgwWindowPropertiesDefaults = (): NgwWindowProps => {
   return {
     id: `${Date.now().toString(36)}-${Math.floor(Math.random() * 9999).toString(36)}`,
     name: 'New window',
-    placementMode: undefined,
-    placement: {
-      offsetX: randomOffset,
-      offsetY: randomOffset,
-      width: 50,
-      height: 50
-    },
-    configuration: {
-      displayName: true,
-      showLeftControls: false,
-      showRightControls: true,
-      maximizable: true,
-      minimizable: true,
-      closeable: true,
-      showTopBar: true,
-      placementDistanceTolerance: 64,
-      resizeDistanceTolerance: 12,
-      allowOutboundMovements: true,
-      allowPlacementAlignment: true,
-      moveable: true,
-      resizeable: true
-    },
-    state: {}
+    component: null
   }
 }
 
 export const resizeNgwWindow = (
-  windowProperties: NgwWindowProperties,
+  placementService: NgwWindowPlacementService,
+  stateService: NgwWindowStateService,
   width: number,
   height: number,
   screenWidth: number,
   screenHeight: number
 ): void => {
   if (
-    windowProperties.state.maximized
-    || windowProperties.state.minimized
+    stateService.maximized()
+    || stateService.minimized()
   ) return;
-  windowProperties.placementMode = undefined;
-  windowProperties.placement.width = Math.min(
-    windowProperties.placementLimits?.maxWidth ?? screenWidth,
-    Math.max(
-      windowProperties.placementLimits?.minWidth ?? 256,
-      width
-    )
-  );
-  windowProperties.placement.height = Math.min(
-    windowProperties.placementLimits?.maxHeight ?? screenHeight,
-    Math.max(
-      windowProperties.placementLimits?.minHeight ?? 48,
-      height
+  placementService.placementMode.set(undefined);
+  placementService.setWH(
+    Math.min(
+      placementService.maxWidth() ?? screenWidth,
+      Math.max(
+        placementService.minWidth() ?? 256,
+        width
+      )
+    ),
+    Math.min(
+      placementService.maxHeight() ?? screenHeight,
+      Math.max(
+        placementService.minHeight() ?? 48,
+        height
+      )
     )
   );
 }
 
 export const moveNgwWindow = (
-  windowProperties: NgwWindowProperties,
+  placementService: NgwWindowPlacementService,
+  stateService: NgwWindowStateService,
+  configurationService: NgwWindowConfigurationService,
   offsetX: number,
   offsetY: number,
   screenWidth: number,
   screenHeight: number
 ) => {
   if (
-    windowProperties.state.maximized
-    || windowProperties.state.minimized
+    stateService.maximized()
+    || stateService.minimized()
   ) return;
-  if (windowProperties.placementMode !== undefined) {
-    windowProperties.placement = structuredClone(windowProperties.placementBeforeAuto) as NgwWindowPlacement;
-    delete windowProperties.placementBeforeAuto;
-    windowProperties.placementMode = undefined;
-  }
-  if (windowProperties.configuration?.allowOutboundMovements) {
-    windowProperties.placement.offsetX = Math.min(
-      screenWidth - 32,
-      Math.max(
-        -windowProperties.placement.width + 32,
-        offsetX
-      )
+  if (placementService.placementMode() !== undefined) {
+    let newPlacement = structuredClone(placementService.placementBeforeAuto()) as NgwWindowPlacement;
+    placementService.setAll(
+      newPlacement.width,
+      newPlacement.height,
+      newPlacement.offsetX,
+      newPlacement.offsetY
     );
-    windowProperties.placement.offsetY = Math.min(
-      screenHeight - 16,
-      Math.max(
-        0,
-        offsetY
+    placementService.placementBeforeAuto.set(undefined);
+    placementService.placementMode.set(undefined);
+  }
+  if (configurationService.allowOutboundMovements()) {
+    placementService.setOffset(
+      Math.min(
+        screenWidth - 32,
+        Math.max(
+          -placementService.width() + 32,
+          offsetX
+        )
+      ),
+      Math.min(
+        screenHeight - 16,
+        Math.max(
+          0,
+          offsetY
+        )
       )
     );
     return;
   }
-  windowProperties.placement.offsetX = Math.min(
-    screenWidth - windowProperties.placement.width,
-    Math.max(
-      0,
-      offsetX
+  placementService.setOffset(
+    Math.min(
+      screenWidth - placementService.width(),
+      Math.max(
+        0,
+        offsetX
+      )
+    ),
+    Math.min(
+      screenHeight - placementService.height(),
+      Math.max(
+        0,
+        offsetY
+      )
     )
-  );
-  windowProperties.placement.offsetY = Math.min(
-    screenHeight - windowProperties.placement.height,
-    Math.max(
-      0,
-      offsetY
-    )
-  );
+  )
 }
 
 export const doNgwWindowPlacementIfPossible = (
-  windowProperties: NgwWindowProperties,
+  placementService: NgwWindowPlacementService,
+  stateService: NgwWindowStateService,
+  configurationService: NgwWindowConfigurationService,
   offsetX: number,
   offsetY: number,
   screenWidth: number,
@@ -119,9 +139,9 @@ export const doNgwWindowPlacementIfPossible = (
   tolerance?: number
 ) => {
   if (
-    windowProperties.state.maximized
-    || windowProperties.state.minimized
-    || !windowProperties.configuration?.allowPlacementAlignment
+    stateService.maximized()
+    || stateService.minimized()
+    || !configurationService.allowPlacementAlignment()
   ) return;
   const placementMode = getWindowPlacement(
     offsetX,
@@ -130,24 +150,27 @@ export const doNgwWindowPlacementIfPossible = (
     screenHeight,
     tolerance
   );
-  windowProperties.placementMode = placementMode;
+  placementService.placementMode.set(placementMode);
   if (placementMode !== undefined) {
-    windowProperties.placementBeforeAuto = structuredClone(windowProperties.placement);
-    windowProperties.placement = structuredClone(WindowPlacements[placementMode]);
-    delete windowProperties.placement.contactPoint;
-    const screenW = screenWidth / 100,
+    placementService.placementBeforeAuto.set(structuredClone(
+      placementService.getPlacementObject()
+    ));
+    const newPlacementInPercent = WindowPlacements[placementMode],
+      screenW = screenWidth / 100,
       screenH = screenHeight / 100;
-    windowProperties.placement.offsetX = Math.round(
-      windowProperties.placement.offsetX * screenW
-    );
-    windowProperties.placement.offsetY = Math.round(
-      windowProperties.placement.offsetY * screenH
-    );
-    windowProperties.placement.width = Math.round(
-      windowProperties.placement.width * screenW
-    );
-    windowProperties.placement.height = Math.round(
-      windowProperties.placement.height * screenH
+    placementService.setAll(
+      Math.round(
+        newPlacementInPercent.width * screenW
+      ),
+      Math.round(
+        newPlacementInPercent.height * screenH
+      ),
+      Math.round(
+        newPlacementInPercent.offsetX * screenW
+      ),
+      Math.round(
+        newPlacementInPercent.offsetY * screenH
+      )
     );
   }
 }

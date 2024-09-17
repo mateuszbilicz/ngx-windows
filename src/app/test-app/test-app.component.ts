@@ -1,5 +1,6 @@
 import {Component, effect, input} from '@angular/core';
-import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window-controller.service";
+import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
+import {getInstrumentationExcludedPaths} from "@angular-devkit/build-angular/src/tools/webpack/utils/helpers";
 
 @Component({
   selector: 'app-test-app',
@@ -13,23 +14,28 @@ export class TestAppComponent {
 
   constructor() {
     effect(() => {
-      let config = this.windowController().instance!.properties().configuration!;
-      config.transparent = true;
-      config.background = 'rgba(235, 235, 235, .75)';
-      config.backdropFilter = 'blur(2px)';
-      config.showTopBar = false;
-      config.resizeable = false;
-      config.moveable = false;
-      config.noShadow = true;
-      config.allowOutboundMovements = true;
+      let configSvc = this.windowController().configurationSvc;
+      configSvc.displayProperties.set({
+        transparent: true,
+        background: 'rgba(235, 235, 235, .75)',
+        backdropFilter: 'blur(2px)',
+        showTopBar: false,
+        resizeable: false,
+        moveable: false,
+        noShadow: true,
+        allowOutboundMovements: true
+      });
 
       setTimeout(() => {
-        config.showTopBar = true;
-        config.resizeable = true;
-        config.moveable = true;
-        config.noShadow = false;
-        config.borderless = true;
+        configSvc.appendProperties({
+          showTopBar: true,
+          resizeable: true,
+          moveable: true,
+          noShadow: false,
+          borderless: true,
+          allowPlacementAlignment: true
+        });
       }, 1000);
-    });
+    }, {allowSignalWrites: true});
   }
 }

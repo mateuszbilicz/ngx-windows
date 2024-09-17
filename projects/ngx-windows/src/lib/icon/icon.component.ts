@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu';
@@ -8,7 +8,8 @@ export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu'
   standalone: true,
   imports: [],
   templateUrl: './icon.component.html',
-  styleUrl: './icon.component.css'
+  styleUrl: './icon.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class IconComponent {
   @Input() type: NgwIconType = 'close';
