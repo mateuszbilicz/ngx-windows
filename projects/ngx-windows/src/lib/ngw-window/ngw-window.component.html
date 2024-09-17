@@ -1,9 +1,9 @@
-@if (properties().configuration?.showTopBar) {
+@if (configurationSvc.showTopBar()) {
   <div class="ngw-window-topbar"
        #_topbar>
-    @if (properties().configuration?.showLeftControls) {
+    @if (configurationSvc.showLeftControls()) {
       <div class="ngw-window-left-controls">
-        @if (properties().configuration?.showMenuButton) {
+        @if (configurationSvc.showMenuButton()) {
           <ngw-icon type="menu"
                     (click)="windowControllerService.onMenu$.next($event)"/>
         }
@@ -12,7 +12,7 @@
         }
       </div>
     }
-    @if (properties().configuration?.displayName) {
+    @if (configurationSvc.displayName()) {
       @if (windowControllerService.windowNameTemplate) {
         <ng-container *ngTemplateOutlet="windowControllerService.windowNameTemplate"/>
       } @else {
@@ -21,20 +21,20 @@
       </span>
       }
     }
-    @if (properties().configuration?.showRightControls) {
+    @if (configurationSvc.showRightControls()) {
       <div class="ngw-window-right-controls">
         @if (windowControllerService.rightControlsTemplate) {
           <ng-container *ngTemplateOutlet="windowControllerService.rightControlsTemplate"/>
         }
-        @if (properties().configuration?.minimizable) {
+        @if (configurationSvc.minimizable()) {
           <ngw-icon type="minimize"
                     (click)="minimize()"/>
         }
-        @if (properties().configuration?.maximizable) {
-          <ngw-icon [type]="properties().state.maximized ? 'restore' : 'maximize'"
+        @if (configurationSvc.maximizable()) {
+          <ngw-icon [type]="stateSvc.maximized() ? 'restore' : 'maximize'"
                     (click)="toggleMaximize()"/>
         }
-        @if (properties().configuration?.closeable) {
+        @if (configurationSvc.closeable()) {
           <ngw-icon type="close"
                     (click)="close($event)"/>
         }
@@ -45,7 +45,7 @@
 @if (initialized()) {
   <div class="ngw-window-content"
        [style]="{
-        maxWidth: properties().placement.width + 'px',
+        maxWidth: placementSvc.width() + 'px',
         maxHeight: getContentHeight
      }">
     @if (properties().component) {
