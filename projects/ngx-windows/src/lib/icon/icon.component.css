@@ -4,7 +4,8 @@ ngw-icon {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  width: 1rem;
+  box-sizing: border-box;
+  width: 2rem;
   aspect-ratio: 1 / 1;
 
   div {
