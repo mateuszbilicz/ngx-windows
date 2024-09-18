@@ -18,6 +18,10 @@ export class NgwWindowConfigurationService {
     });
   }
 
+  setProperties(properties: NgwWindowConfiguration) {
+    this.displayProperties.set(properties);
+  }
+
   appendProperties(properties: Partial<NgwWindowConfiguration>) {
     this.displayProperties.set({
       ...this.displayProperties(),

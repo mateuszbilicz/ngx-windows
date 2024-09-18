@@ -1,6 +1,5 @@
 import '@angular/compiler';
-import {computed, DestroyRef, Injectable, input, signal, TemplateRef} from '@angular/core';
-import {NgwWindowComponent} from "../ngw-window.component";
+import {computed, DestroyRef, Injectable, signal, TemplateRef} from '@angular/core';
 import {Subject} from "rxjs";
 import {NgwWindowConfigurationService} from "./ngw-window-configuration.service";
 import {NgwWindowPlacementService} from "./ngw-window-placement.service";
