@@ -11,6 +11,6 @@
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts",
-    "projects/ngx-windows/src/**/*.spec.ts",
+    "projects/ngx-windows/src/**/*.spec.ts"
   ]
 }

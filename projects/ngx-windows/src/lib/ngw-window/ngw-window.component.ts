@@ -1,9 +1,13 @@
 import {
   AfterViewInit,
-  Component, DestroyRef, effect,
+  Component,
+  DestroyRef,
+  effect,
   ElementRef,
   HostBinding,
-  HostListener, inject, input,
+  HostListener,
+  inject,
+  input,
   signal,
   ViewChild,
   ViewEncapsulation
@@ -42,14 +46,34 @@ export class NgwWindowComponent
   implements AfterViewInit {
   properties = input.required<NgwWindowProps>();
   initialized = signal<boolean>(false);
-  private isResizing = false;
-  private isMoving = false;
-  private mouseMoveListener: Subscription | undefined;
-  private isOverResizingPoint: boolean = false;
   topbar?: ElementRef;
   configurationSvc = inject(NgwWindowConfigurationService);
   placementSvc = inject(NgwWindowPlacementService);
   stateSvc = inject(NgwWindowStateService);
+  private isResizing = false;
+  private isMoving = false;
+  private mouseMoveListener: Subscription | undefined;
+  private isOverResizingPoint: boolean = false;
+
+  constructor(public nwm: NgwWindowsManagerService,
+              private el: ElementRef,
+              private destroyRef: DestroyRef,
+              public windowControllerService: NgwWindowControllerService) {
+    effect(() => {
+      this.windowControllerService.properties.set(
+        this.properties()
+      );
+    }, {allowSignalWrites: true});
+    effect(() => {
+      const id = this.windowControllerService.id();
+      this.initialized.set(
+        !!id
+      );
+      if (id) {
+        this.nwm.registerWindow(id, this.windowControllerService);
+      }
+    }, {allowSignalWrites: true});
+  }
 
   @ViewChild('_topbar') set __topbar(e: ElementRef) {
     if (e) this.topbar = e;
@@ -123,29 +147,16 @@ export class NgwWindowComponent
     return this.configurationSvc.backdropFilter();
   }
 
+  get getContentHeight(): string {
+    if (this.topbar?.nativeElement) {
+      return (this.placementSvc.height() - this.topbar.nativeElement.clientHeight) + 'px'
+    }
+    return this.height;
+  }
+
   @HostListener('click') activate() {
     if (this.stateSvc.focused() || this.stateSvc.locked()) return;
     this.nwm.activateWindow(this.windowControllerService.id());
-  }
-
-  constructor(public nwm: NgwWindowsManagerService,
-              private el: ElementRef,
-              private destroyRef: DestroyRef,
-              public windowControllerService: NgwWindowControllerService) {
-    effect(() => {
-      this.windowControllerService.properties.set(
-        this.properties()
-      );
-    }, {allowSignalWrites: true});
-    effect(() => {
-      const id = this.windowControllerService.id();
-      this.initialized.set(
-        !!id
-      );
-      if (id) {
-        this.nwm.registerWindow(id, this.windowControllerService);
-      }
-    }, {allowSignalWrites: true});
   }
 
   ngAfterViewInit() {
@@ -273,12 +284,5 @@ export class NgwWindowComponent
           doStop();
         }
       });
-  }
-
-  get getContentHeight(): string {
-    if (this.topbar?.nativeElement) {
-      return (this.placementSvc.height() - this.topbar.nativeElement.clientHeight) + 'px'
-    }
-    return this.height;
   }
 }

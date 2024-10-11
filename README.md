@@ -23,13 +23,16 @@ This project is under ISC license.
 ## Usage
 
 1. You should provide NgwWindowsManagerService in app config
-or if you need multiple instances - in specific component that will
-contain windows.
+   or if you need multiple instances - in specific component that will
+   contain windows.
 
 2. Add NgwWindowsContainerComponent to your template
+
 ```angular17html
+
 <ngw-windows-container [style]="{width: '100vw', height: '100vh'}"/>
 ```
+
 You must set width and height of this container for windows.
 
 3. Creating window
@@ -113,7 +116,7 @@ No test were written in current version.
 - [ ] Search for unused imports after rewrite of services and fix them
 - [ ] Add example bar with active&minimized windows
 - [ ] Readme API NgwWindowControllerService section - info about child services and its subjects
-that can be used to handle placement, state and config changes
+  that can be used to handle placement, state and config changes
 - [ ] Create some example layout inside TestAppComponent
 - [ ] Add example with lazy-loading and loading screen on window
 - [ ] Write tests

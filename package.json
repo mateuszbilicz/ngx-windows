@@ -13,7 +13,11 @@
       "projects/ngx-windows/src/public-api.ts"
     ]
   },
-  "keywords": ["Angular", "floating window", "HTML Windows"],
+  "keywords": [
+    "Angular",
+    "floating window",
+    "HTML Windows"
+  ],
   "repository": "https://github.com/mateuszbilicz/ngx-windows",
   "scripts": {
     "ng": "ng",

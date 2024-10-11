@@ -2,7 +2,8 @@ import '@angular/compiler';
 import {Injectable} from '@angular/core';
 import {
   ActiveNgwWindowProps,
-  NgwWindowPropsWithoutId, NgwWindowPropsWithService
+  NgwWindowPropsWithoutId,
+  NgwWindowPropsWithService
 } from "./models/ngw-window-properties.model";
 import {BehaviorSubject, Subject} from "rxjs";
 import {createNgwWindowPropertiesDefaults} from "./api/ngw-windows.api";

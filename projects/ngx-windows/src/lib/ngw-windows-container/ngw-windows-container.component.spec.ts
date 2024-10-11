@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NgwWindowsContainerComponent } from './ngw-windows-container.component';
+import {NgwWindowsContainerComponent} from './ngw-windows-container.component';
 
 describe('NgwWindowsContainerComponent', () => {
   let component: NgwWindowsContainerComponent;
@@ -10,7 +10,7 @@ describe('NgwWindowsContainerComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NgwWindowsContainerComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NgwWindowsContainerComponent);
     component = fixture.componentInstance;

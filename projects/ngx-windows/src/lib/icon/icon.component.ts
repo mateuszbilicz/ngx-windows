@@ -14,7 +14,8 @@ export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu'
 export class IconComponent {
   @Input() type: NgwIconType = 'close';
 
-  constructor(private satanizer: DomSanitizer) {}
+  constructor(private satanizer: DomSanitizer) {
+  }
 
   get iconSvgHTML(): string {
     switch (this.type) {

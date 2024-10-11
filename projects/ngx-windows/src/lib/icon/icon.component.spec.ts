@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { IconComponent } from './icon.component';
+import {IconComponent} from './icon.component';
 
 describe('IconComponent', () => {
   let component: IconComponent;
@@ -10,7 +10,7 @@ describe('IconComponent', () => {
     await TestBed.configureTestingModule({
       imports: [IconComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(IconComponent);
     component = fixture.componentInstance;

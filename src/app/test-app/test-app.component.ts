@@ -1,6 +1,5 @@
 import {Component, effect, input} from '@angular/core';
 import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
-import {getInstrumentationExcludedPaths} from "@angular-devkit/build-angular/src/tools/webpack/utils/helpers";
 
 @Component({
   selector: 'app-test-app',

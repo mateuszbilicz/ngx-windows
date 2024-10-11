@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { NgwWindowStateService } from './ngw-window-state.service';
+import {NgwWindowStateService} from './ngw-window-state.service';
 
 describe('NgwWindowStateService', () => {
   let service: NgwWindowStateService;

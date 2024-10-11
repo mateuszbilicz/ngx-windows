@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { NgwWindowPlacementService } from './ngw-window-placement.service';
+import {NgwWindowPlacementService} from './ngw-window-placement.service';
 
 describe('NgwWindowPlacementService', () => {
   let service: NgwWindowPlacementService;

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TestAppComponent } from './test-app.component';
+import {TestAppComponent} from './test-app.component';
 import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
 
 describe('TestAppComponent', () => {
@@ -11,7 +11,7 @@ describe('TestAppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TestAppComponent]
     })
-    .compileComponents();
+      .compileComponents();
     const ngwWindowControllerService = TestBed.inject(NgwWindowControllerService);
     fixture = TestBed.createComponent(TestAppComponent);
     fixture.componentRef.setInput('windowController', ngwWindowControllerService);

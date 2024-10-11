@@ -1,8 +1,8 @@
-<input id="{{windowController().id()}}-close-locked"
-       type="checkbox"
-       [checked]="closeLocked()"
+<input #closeLockedCheckbox
        (change)="closeLocked.set(!closeLocked())"
-        #closeLockedCheckbox>
+       [checked]="closeLocked()"
+       id="{{windowController().id()}}-close-locked"
+       type="checkbox">
 <label [for]="closeLockedCheckbox.id">
   Lock close button
 </label>

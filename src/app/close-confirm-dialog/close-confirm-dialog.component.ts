@@ -14,7 +14,8 @@ export class CloseConfirmDialogComponent
   implements OnInit {
   windowController = input.required<NgwWindowControllerService>();
 
-  constructor(private nwm: NgwWindowsManagerService) {}
+  constructor(private nwm: NgwWindowsManagerService) {
+  }
 
   ngOnInit() {
     this.windowController().data().lockParent();

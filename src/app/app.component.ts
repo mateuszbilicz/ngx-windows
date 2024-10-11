@@ -30,13 +30,13 @@ export class AppComponent {
     win.onRegister$
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(service => {
-      service.placementSvc.setAll(
-        800,
-        600,
-        30,
-        30
-      );
-    });
+        service.placementSvc.setAll(
+          800,
+          600,
+          30,
+          30
+        );
+      });
   }
 
   addWindowWithCloseDialog() {
