@@ -1,19 +1,17 @@
 import {Component, DestroyRef} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
-import {NgwWindowsManagerService} from "../../projects/ngx-windows/src/lib/ngw-windows-manager.service";
-import {
-  NgwWindowsContainerComponent
-} from "../../projects/ngx-windows/src/lib/ngw-windows-container/ngw-windows-container.component";
 import {TestAppComponent} from "./test-app/test-app.component";
 import {
   CloseConfirmDialogExampleComponent
 } from "./close-confirm-dialog-example/close-confirm-dialog-example.component";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {ActiveWindowsBarComponent} from "./active-windows-bar/active-windows-bar.component";
+import {NgwWindowsContainerComponent, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgwWindowsContainerComponent],
+  imports: [RouterOutlet, NgwWindowsContainerComponent, ActiveWindowsBarComponent],
   providers: [
     NgwWindowsManagerService
   ],

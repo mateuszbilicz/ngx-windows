@@ -1,0 +1,53 @@
+app-active-windows-bar {
+  position: fixed;
+  left: 0;
+  bottom: -1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 9999;
+  width: 100vw;
+  height: 2rem;
+  background-color: rgba(0, 0, 0, .35);
+  box-sizing: border-box;
+  gap: .25rem;
+  transition: bottom .15s ease-in-out;
+
+  &:hover,
+  &:focus,
+  .win:focus > & {
+    bottom: 0;
+  }
+
+  .win {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+    color: #fff;
+    text-shadow: 0 0 2px rgba(0, 0, 0, .5);
+    font-size: 1rem;
+    line-height: 1rem;
+    font-family: Roboto, sans-serif;
+    gap: .5rem;
+
+    &.active {
+      background-color: rgba(100, 120, 150, .5);
+
+      &:hover {
+        background-color: rgba(100, 120, 150, .65);
+      }
+    }
+
+    &:not(.active):hover {
+      background-color: rgba(100, 120, 150, .35);
+    }
+
+    ngw-icon {
+      width: 1rem;
+    }
+  }
+}

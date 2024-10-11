@@ -1,6 +1,5 @@
 import {Component, input, OnInit, ViewEncapsulation} from '@angular/core';
-import {NgwWindowsManagerService} from "../../../projects/ngx-windows/src/lib/ngw-windows-manager.service";
-import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
+import {NgwWindowControllerService, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
   selector: 'app-close-confirm-dialog',

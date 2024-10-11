@@ -1,4 +1,4 @@
-@for (win of nwm.activeWindows$ | async; track win.id) {
+@for (win of nwm.activeWindows(); track win.id) {
   <ngw-window [properties]="win"/>
 }
 <div #windowPlacementPrediction

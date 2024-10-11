@@ -113,8 +113,8 @@ No test were written in current version.
 
 # TODO
 
-- [ ] Search for unused imports after rewrite of services and fix them
-- [ ] Add example bar with active&minimized windows
+- [X] Search for unused imports after rewrite of services and fix them
+- [X] Add example bar with active&minimized windows
 - [ ] Readme API NgwWindowControllerService section - info about child services and its subjects
   that can be used to handle placement, state and config changes
 - [ ] Create some example layout inside TestAppComponent

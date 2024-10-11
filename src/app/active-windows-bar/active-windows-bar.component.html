@@ -1,0 +1,8 @@
+@for (win of windowsFiltered(); track win.id) {
+  <div class="win{{ activeWindow()?.id == win.id ? ' active' : '' }}"
+       (click)="activateWindow(win.id)">
+    {{ win.name }}
+    <ngw-icon type="close"
+              (click)="closeWindow(win, $event)"/>
+  </div>
+}

@@ -89,6 +89,9 @@ export class NgwWindowControllerService {
 
   minimize() {
     this.stateSvc.minimized.set(true);
+    if (this.nwm.currentActiveWindow()?.id == this.id()) {
+      this.nwm.deactivateCurrentActiveWindow();
+    }
   }
 
   toggleMaximize() {

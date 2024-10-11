@@ -28,15 +28,15 @@
         }
         @if (configurationSvc.minimizable()) {
           <ngw-icon type="minimize"
-                    (click)="windowControllerService.minimize()"/>
+                    (click)="windowControllerService.minimize();stopEv($event)"/>
         }
         @if (configurationSvc.maximizable()) {
           <ngw-icon [type]="stateSvc.maximized() ? 'restore' : 'maximize'"
-                    (click)="windowControllerService.toggleMaximize()"/>
+                    (click)="windowControllerService.toggleMaximize();stopEv($event)"/>
         }
         @if (configurationSvc.closeable()) {
           <ngw-icon type="close"
-                    (click)="windowControllerService.close($event)"/>
+                    (click)="windowControllerService.close($event);stopEv($event)"/>
         }
       </div>
     }

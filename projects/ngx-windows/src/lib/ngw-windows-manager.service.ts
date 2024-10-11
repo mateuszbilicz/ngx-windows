@@ -1,5 +1,5 @@
 import '@angular/compiler';
-import {Injectable} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {
   ActiveNgwWindowProps,
   NgwWindowPropsWithoutId,
@@ -15,8 +15,8 @@ import {NgwWindowControllerService} from "./ngw-window/services/ngw-window-contr
 })
 export class NgwWindowsManagerService {
 
-  activeWindows$: BehaviorSubject<ActiveNgwWindowProps[]> = new BehaviorSubject<ActiveNgwWindowProps[]>([]);
-  currentActiveWindow$: BehaviorSubject<ActiveNgwWindowProps | undefined> = new BehaviorSubject<ActiveNgwWindowProps | undefined>(undefined);
+  activeWindows = signal<ActiveNgwWindowProps[]>([]);
+  currentActiveWindow= signal<ActiveNgwWindowProps | undefined>(undefined);
   onPlacementChange$: BehaviorSubject<NgwWindowPlacement | undefined> = new BehaviorSubject<NgwWindowPlacement | undefined>(undefined);
 
   createWindow(properties: NgwWindowPropsWithoutId, activate?: boolean): ActiveNgwWindowProps {
@@ -26,8 +26,8 @@ export class NgwWindowsManagerService {
       service: undefined,
       onRegister$: new Subject<NgwWindowControllerService>()
     };
-    this.activeWindows$.next([
-      ...this.activeWindows$.getValue(),
+    this.activeWindows.update(currentActive => [
+      ...currentActive,
       props
     ]);
     if (activate) {
@@ -37,63 +37,74 @@ export class NgwWindowsManagerService {
   }
 
   removeWindow(windowId: string): void {
-    const activeWindow = this.currentActiveWindow$.getValue();
+    const activeWindow = this.currentActiveWindow();
     if (activeWindow && activeWindow.id === windowId)
-      this.currentActiveWindow$.next(undefined);
-    this.activeWindows$.next(
-      this.activeWindows$.getValue()
-        .filter(window => window.id !== windowId)
+      this.currentActiveWindow.set(undefined);
+    this.activeWindows.update(currentActive =>
+      currentActive
+        .filter(win => win.id !== windowId)
     );
   }
 
   filterWindowsByName(nameFilter?: string): NgwWindowPropsWithService[] {
     nameFilter = nameFilter?.toLowerCase() ?? '';
-    return this.activeWindows$.getValue()
+    return this.activeWindows()
       .filter(win =>
         win.name.toLowerCase().includes(nameFilter)
       );
   }
 
   getWindowById(windowId: string): NgwWindowPropsWithService | undefined {
-    return this.activeWindows$.getValue()
+    return this.activeWindows()
       .find(win => win.id === windowId);
   }
 
   getOpenWindows(): NgwWindowPropsWithService[] {
-    return this.activeWindows$.getValue()
+    return this.activeWindows()
       .filter(win => !win.service?.stateSvc.minimized());
   }
 
   getMaximizedWindows(): NgwWindowPropsWithService[] {
-    return this.activeWindows$.getValue()
+    return this.activeWindows()
       .filter(win => win.service?.stateSvc.maximized());
   }
 
   getMinimizedWindows(): NgwWindowPropsWithService[] {
-    return this.activeWindows$.getValue()
+    return this.activeWindows()
       .filter(win => win.service?.stateSvc.minimized());
   }
 
   getActiveWindow(): NgwWindowPropsWithService | undefined {
-    return this.currentActiveWindow$.getValue();
+    return this.currentActiveWindow();
   }
 
   activateWindow(windowId: string): void {
-    let currActive = this.currentActiveWindow$.getValue();
+    let currActive = this.currentActiveWindow();
     if (currActive) {
       if (currActive.id === windowId) return;
       currActive.service?.stateSvc.focused.set(false);
     }
-    let nextActive = this.activeWindows$.getValue()
+    let nextActive = this.activeWindows()
       .find(win => win.id === windowId);
     if (!nextActive) return;
     nextActive.service?.stateSvc.focused.set(true);
-    this.currentActiveWindow$.next(nextActive);
+    this.currentActiveWindow.set(nextActive);
+    if (nextActive.service?.stateSvc.minimized()) {
+      nextActive.service?.stateSvc.minimized.set(false);
+    }
+  }
+
+  deactivateCurrentActiveWindow() {
+    let currActive = this.currentActiveWindow();
+    if (currActive) {
+      currActive.service?.stateSvc.focused.set(false);
+    }
+    this.currentActiveWindow.set(undefined);
   }
 
   removeAllWindows(): void {
-    this.activeWindows$.next([]);
-    this.currentActiveWindow$.next(undefined);
+    this.activeWindows.set([]);
+    this.currentActiveWindow.set(undefined);
   }
 
   onPlacementPrediction(placement?: NgwWindowPlacement) {
@@ -102,15 +113,16 @@ export class NgwWindowsManagerService {
 
   registerWindow(id: string, service: NgwWindowControllerService): void {
     let onRegisterSubject: Subject<NgwWindowControllerService> | undefined = undefined;
-    this.activeWindows$.next([
-      ...this.activeWindows$.getValue().map(win => {
-        if (win.id === id) {
-          onRegisterSubject = win.onRegister$;
-          win.service = service;
-        }
-        return win;
-      })
-    ]);
+    this.activeWindows.update(currentActive =>
+      currentActive
+        .map(win => {
+          if (win.id === id) {
+            onRegisterSubject = win.onRegister$;
+            win.service = service;
+          }
+          return win;
+        })
+    );
     if (onRegisterSubject !== undefined) {
       onRegisterSubject = onRegisterSubject as Subject<NgwWindowControllerService>;
       onRegisterSubject.next(service);

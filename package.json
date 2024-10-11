@@ -24,7 +24,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "update-ngx-windows": "ng build ngx-windows & npm i ./dist/ngx-windows",
+    "build-ngx-windows": "ng build ngx-windows",
+    "update-ngx-windows": "ng build ngx-windows; npm pack ./dist/ngx-windows; npm install ./ngx-windows-0.0.1.tgz",
     "test": "ng test"
   },
   "dependencies": {
@@ -36,7 +37,7 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
-    "ngx-windows": "file:projects/ngx-windows",
+    "ngx-windows": "file:ngx-windows-0.0.1.tgz",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

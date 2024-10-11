@@ -285,4 +285,10 @@ export class NgwWindowComponent
         }
       });
   }
+
+  stopEv(ev: Event) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    ev.stopImmediatePropagation();
+  }
 }

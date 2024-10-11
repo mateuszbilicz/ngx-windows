@@ -1,10 +1,9 @@
 import '@angular/compiler';
 import {Component, DestroyRef, effect, input, signal, ViewEncapsulation} from '@angular/core';
-import {NgwWindowsManagerService} from "../../../projects/ngx-windows/src/lib/ngw-windows-manager.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {CloseConfirmDialogComponent} from "../close-confirm-dialog/close-confirm-dialog.component";
 import {debounceTime} from "rxjs";
-import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
+import {NgwWindowControllerService, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
   selector: 'app-close-confirm-dialog-example',
@@ -52,7 +51,7 @@ export class CloseConfirmDialogExampleComponent {
         if (this.closeConfirmWindowId) this.nwm.removeWindow(this.closeConfirmWindowId!);
         this.nwm.removeWindow(this.windowController().id());
       }
-    });
+    }, {allowSignalWrites: true});
   }
 
   createCloseConfirmWindow(ev: MouseEvent) {
@@ -71,8 +70,8 @@ export class CloseConfirmDialogExampleComponent {
           service.placementSvc.setAll(
             300,
             120,
-            ev.clientX - 300,
-            ev.clientY
+            Math.max(0, ev.clientX - 300),
+            Math.min(ev.clientY, window.innerHeight - 150)
           );
           service.configurationSvc.appendProperties({
             showTopBar: true,
@@ -85,6 +84,7 @@ export class CloseConfirmDialogExampleComponent {
             resizeable: false
           });
           service.data.set({
+            skipInTaskbar: true,
             confirmClose: this.confirmClose,
             lockParent: () => {
               this.windowController().setLocked(true);
