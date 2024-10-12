@@ -94,7 +94,7 @@ export class NgwWindowsManagerService {
     }
   }
 
-  deactivateCurrentActiveWindow() {
+  deactivateCurrentActiveWindow(): void {
     let currActive = this.currentActiveWindow();
     if (currActive) {
       currActive.service?.stateSvc.focused.set(false);
@@ -107,7 +107,7 @@ export class NgwWindowsManagerService {
     this.currentActiveWindow.set(undefined);
   }
 
-  onPlacementPrediction(placement?: NgwWindowPlacement) {
+  onPlacementPrediction(placement?: NgwWindowPlacement): void {
     this.onPlacementChange$.next(placement);
   }
 
