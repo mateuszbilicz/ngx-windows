@@ -3,5 +3,8 @@
   "dest": "../../dist/ngx-windows",
   "lib": {
     "entryFile": "src/public-api.ts"
-  }
+  },
+  "assets": [
+    "./ngx-windows-style.css"
+  ]
 }

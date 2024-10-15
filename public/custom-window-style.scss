@@ -1,0 +1,43 @@
+ngw-window {
+  &:not(.transparent) {
+    background: #333 !important;
+  }
+
+  &:not(&.borderless) {
+    border: solid 2px #e8816f;
+  }
+
+  &:not(&.noshadow) {
+    box-shadow: 1px 1px 6px rgba(120, 0, 0, 0.2);
+  }
+
+  &.focused:not(&.noshadow) {
+    box-shadow: 1px 1px 6px rgba(168, 0, 0, 0.35),
+    1px 1px 4px rgba(168, 0, 0, 0.2);
+  }
+
+  .ngw-window-topbar {
+    background: #373737;
+    color: #e8816f;
+  }
+
+  ngw-icon:hover {
+    background-color: rgba(253, 253, 253, 0.35);
+  }
+
+  .ngw-window-content {
+    color: #efefef;
+    padding: .5rem;
+  }
+}
+
+ngw-windows-container .ngw-window-placement-prediction.show {
+  background-color: rgba(255, 96, 96, 0.5) !important;
+  border: solid 2px rgba(255, 75, 75, 0.95) !important;
+  backdrop-filter: blur(2px) !important;
+}
+
+ngw-icon svg path {
+  fill: #e8816f;
+  stroke: #e8816f;
+}

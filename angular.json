@@ -32,6 +32,7 @@
               }
             ],
             "styles": [
+              "./node_modules/ngx-windows/ngx-windows-style.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -91,6 +92,7 @@
               }
             ],
             "styles": [
+              "./node_modules/ngx-windows/ngx-windows-style.css",
               "src/styles.scss"
             ],
             "scripts": []

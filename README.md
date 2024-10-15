@@ -22,6 +22,15 @@ Current not prepared for NPM version: `npm run update-ngx-windows`.
 
 ... TODO
 
+Add ngx-windows style to your angular.json config file:
+
+```json
+"styles": [
+  "./node_modules/ngx-windows/ngx-windows-style.css",
+  "src/styles.scss"
+]
+```
+
 ## Usage
 
 1. You should provide NgwWindowsManagerService in app config
@@ -977,7 +986,55 @@ Provided in and used by NgwWindowComponent.
 
 # Styling
 
-... TODO: about css, theming, etc...
+You can create custom scss file with styles and import it in your styles.scss file.
+Example file can be found in public/custom-window-style.scss file.
+
+Default style:
+```scss
+ngw-window {
+  &:not(.transparent) {
+    background: #efefef !important;
+  }
+
+  &:not(&.borderless) {
+    border: solid 1px #373737;
+  }
+
+  &:not(&.noshadow) {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &.focused:not(&.noshadow) {
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, .35),
+    1px 1px 4px rgba(0, 0, 0, .2);
+  }
+
+  .ngw-window-topbar {
+    background: #373737;
+    color: #fff;
+  }
+
+  ngw-icon:hover {
+    background-color: rgba(255, 255, 255, .15);
+  }
+
+  .ngw-window-content {
+    color: #000;
+    padding: 0;
+  }
+}
+
+ngw-windows-container .ngw-window-placement-prediction.show {
+  background-color: rgba(150, 200, 255, .5);
+  border: solid 2px rgba(150, 200, 255, .95);
+  backdrop-filter: blur(1px);
+}
+
+ngw-icon svg path {
+  fill: #fff;
+  stroke: #fff;
+}
+```
 
 # Testing
 

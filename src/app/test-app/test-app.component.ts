@@ -15,8 +15,8 @@ export class TestAppComponent {
     effect(() => {
       let configSvc = this.windowController().configurationSvc;
       configSvc.displayProperties.set({
-        transparent: true,
-        background: 'rgba(235, 235, 235, .75)',
+        // transparent: true,
+        // background: 'rgba(235, 235, 235, .75)',
         backdropFilter: 'blur(2px)',
         showTopBar: false,
         resizeable: false,

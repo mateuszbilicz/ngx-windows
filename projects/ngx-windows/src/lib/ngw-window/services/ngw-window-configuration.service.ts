@@ -22,7 +22,7 @@ export class NgwWindowConfigurationService {
   borderless = computed(() => this.displayProperties().borderless ?? false);
   noShadow = computed(() => this.displayProperties().noShadow ?? false);
   transparent = computed(() => this.displayProperties().transparent ?? false);
-  background = computed(() => this.displayProperties().background ?? '#eee');
+  background = computed(() => this.displayProperties().background ?? 'none');
   backdropFilter = computed(() => this.displayProperties().backdropFilter);
   moveable = computed(() => this.displayProperties().moveable ?? true);
   resizeable = computed(() => this.displayProperties().resizeable ?? true);

@@ -8,7 +8,7 @@ export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu'
   standalone: true,
   imports: [],
   templateUrl: './icon.component.html',
-  styleUrl: './icon.component.css',
+  styles: '',
   encapsulation: ViewEncapsulation.None
 })
 export class IconComponent {

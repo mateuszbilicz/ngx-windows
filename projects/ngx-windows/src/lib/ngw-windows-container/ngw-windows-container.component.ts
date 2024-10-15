@@ -13,7 +13,7 @@ import {debounceTime, distinctUntilChanged, throttleTime} from "rxjs";
     NgwWindowComponent
   ],
   templateUrl: './ngw-windows-container.component.html',
-  styleUrl: './ngw-windows-container.component.css',
+  styles: '',
   encapsulation: ViewEncapsulation.None,
 })
 export class NgwWindowsContainerComponent

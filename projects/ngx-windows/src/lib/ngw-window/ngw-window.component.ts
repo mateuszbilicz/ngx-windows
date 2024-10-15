@@ -39,7 +39,7 @@ import {NgwWindowProps} from "../models/ngw-window-properties.model";
     NgwWindowStateService
   ],
   templateUrl: './ngw-window.component.html',
-  styleUrl: './ngw-window.component.css',
+  styles: '',
   encapsulation: ViewEncapsulation.None
 })
 export class NgwWindowComponent
