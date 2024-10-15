@@ -501,6 +501,480 @@ required input `windowController: InputSignal<NgwWindowControllerService>`.
   </tr>
 </table>
 
+# NgwWindowConfigurationService
+
+Provided in and used by NgwWindowComponent.
+
+<table>
+  <caption>
+    <b>Properties</b>
+  </caption>
+  <tr>
+    <th>Property</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>displayProperties</td>
+    <td>
+      <code>WritableSignal&lt;NgwWindowConfiguration&gt;</code>
+    </td>
+    <td>
+      All window display properties.
+    </td>
+  </tr>
+  <tr>
+    <td>displayName</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Display window name in topbar.
+    </td>
+  </tr>
+  <tr>
+    <td>showLeftControls</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Show window left controls, by default - menu button.
+    </td>
+  </tr>
+  <tr>
+    <td>showRightControls</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Show window right controls, by default - minimize, maximize, close.
+    </td>
+  </tr>
+  <tr>
+    <td>showMenuButton</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Show window menu button which emits onMenu$ on click.
+    </td>
+  </tr>
+  <tr>
+    <td>maximizable</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window can be maximized.
+    </td>
+  </tr>
+  <tr>
+    <td>minimizable</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window can be minimized.
+    </td>
+  </tr>
+  <tr>
+    <td>closeable</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window can be closed by user.
+    </td>
+  </tr>
+  <tr>
+    <td>preventClose</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets close prevention by user. You can use onClose$ to show close confirmation dialog and then use removeWindow.
+    </td>
+  </tr>
+  <tr>
+    <td>showTopBar</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window topbar could be shown. Without it you need to manually manage window state, close and move.
+    </td>
+  </tr>
+  <tr>
+    <td>placementDistanceTolerance</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Tolerance of placement prediction & alignment (distance from placement point).
+    </td>
+  </tr>
+  <tr>
+    <td>resizeDistanceTolerance</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Distance to window resize point for resize activation (right bottom corner).
+    </td>
+  </tr>
+  <tr>
+    <td>allowOutboundMovements</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window could be moved outside user viewport.
+    </td>
+  </tr>
+  <tr>
+    <td>allowPlacementAlignment</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window could be aligned to placement point.
+    </td>
+  </tr>
+  <tr>
+    <td>borderless</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Disables window border.
+    </td>
+  </tr>
+  <tr>
+    <td>noShadow</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Disabled window shadow.
+    </td>
+  </tr>
+  <tr>
+    <td>transparent</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window should be transparent.
+    </td>
+  </tr>
+  <tr>
+    <td>background</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets css window background (if not transparent).
+    </td>
+  </tr>
+  <tr>
+    <td>backdropFilter</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets css backdrop filter.
+    </td>
+  </tr>
+  <tr>
+    <td>moveable</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window could be moveable.
+    </td>
+  </tr>
+  <tr>
+    <td>resizeable</td>
+    <td>
+      <code>Signal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Sets if window could be resizeable.
+    </td>
+  </tr>
+</table>
+
+<table>
+  <caption>
+    <b>Functions</b>
+  </caption>
+  <tr>
+    <th>Function</th>
+    <th>Arguments</th>
+    <th>Returns</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>setProperty</td>
+    <td>
+      <code>property: T</code>,
+      <code>value: NgwWindowConfiguration[T]</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>
+      Sets specific property defined in NgwWindowConfiguration.
+    </td>
+  </tr>
+  <tr>
+    <td>setProperties</td>
+    <td>
+      <code>properties: NgwWindowConfiguration</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>
+      Overrides all window configuration properties.
+    </td>
+  </tr>
+  <tr>
+    <td>appendProperties</td>
+    <td>
+      <code>properties: Partial&lt;NgwWindowConfiguration&gt;</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>
+      Concat new properties with previous.
+    </td>
+  </tr>
+</table>
+
+# NgwWindowPlacementService
+
+Provided in and used by NgwWindowComponent.
+
+<table>
+  <caption>
+    <b>Properties</b>
+  </caption>
+  <tr>
+    <th>Property</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>placementMode</td>
+    <td>
+      <code>WritableSignal&lt;WindowPlacementsKeyName | undefined&gt;</code>
+    </td>
+    <td>
+      Current window placement mode.
+    </td>
+  </tr>
+  <tr>
+    <td>placementBeforeAuto</td>
+    <td>
+      <code>WritableSignal&lt;NgwWindowPlacement | undefined&gt;</code>
+    </td>
+    <td>
+      Window placement before alignment.
+    </td>
+  </tr>
+  <tr>
+    <td>width</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window width.
+    </td>
+  </tr>
+  <tr>
+    <td>height</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window height.
+    </td>
+  </tr>
+  <tr>
+    <td>offsetX</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window X position.
+    </td>
+  </tr>
+  <tr>
+    <td>offsetY</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window Y position.
+    </td>
+  </tr>
+  <tr>
+    <td>minWidth</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window minimum width.
+    </td>
+  </tr>
+  <tr>
+    <td>maxWidth</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window maximum width.
+    </td>
+  </tr>
+  <tr>
+    <td>minHeight</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window minimum height.
+    </td>
+  </tr>
+  <tr>
+    <td>maxHeight</td>
+    <td>
+      <code>WritableSignal&lt;number&gt;</code>
+    </td>
+    <td>
+      Window maximum height.
+    </td>
+  </tr>
+</table>
+
+<table>
+  <caption>
+    <b>Functions</b>
+  </caption>
+  <tr>
+    <th>Function</th>
+    <th>Arguments</th>
+    <th>Returns</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>setWH</td>
+    <td>
+      <code>width: number</code>,
+      <code>height: number</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>
+      Sets window width and height.
+    </td>
+  </tr>
+  <tr>
+    <td>setOffset</td>
+    <td>
+      <code>offsetX: number</code>,
+      <code>offsetY: number</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>
+      Set window XY position.
+    </td>
+  </tr>
+  <tr>
+    <td>setAll</td>
+    <td>
+      <code>width: number</code>,
+      <code>height: number</code>,
+      <code>offsetX: number</code>,
+      <code>offsetY: number</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>
+      Sets all window placement properties.
+    </td>
+  </tr>
+  <tr>
+    <td>getPlacementObject</td>
+    <td>
+      <code>none</code>
+    </td>
+    <td>
+      <code>NgwWindowPlacement</code>
+    </td>
+    <td>
+      Current window placement object.
+    </td>
+  </tr>
+</table>
+
+# NgwWindowStateService
+
+Provided in and used by NgwWindowComponent.
+
+<table>
+  <caption>
+    <b>Properties</b>
+  </caption>
+  <tr>
+    <th>Property</th>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>minimized</td>
+    <td>
+      <code>WritableSignal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Window minimized state signal.
+    </td>
+  </tr>
+  <tr>
+    <td>maximized</td>
+    <td>
+      <code>WritableSignal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Window maximized state signal.
+    </td>
+  </tr>
+  <tr>
+    <td>focused</td>
+    <td>
+      <code>WritableSignal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Window focused state signal.
+    </td>
+  </tr>
+  <tr>
+    <td>locked</td>
+    <td>
+      <code>WritableSignal&lt;boolean&gt;</code>
+    </td>
+    <td>
+      Window locked state signal.
+    </td>
+  </tr>
+</table>
+
 # Styling
 
 ... TODO: about css, theming, etc...

@@ -16,7 +16,6 @@ export class NgwWindowPlacementService {
   minHeight = signal<number>(48);
   maxHeight = signal<number>(Infinity);
 
-
   setWH(width: number, height: number) {
     this.width.set(width);
     this.height.set(height);
