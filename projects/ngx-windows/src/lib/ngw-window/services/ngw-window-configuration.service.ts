@@ -27,10 +27,6 @@ export class NgwWindowConfigurationService {
   moveable = computed(() => this.displayProperties().moveable ?? true);
   resizeable = computed(() => this.displayProperties().resizeable ?? true);
 
-  constructor() {
-    // this.setProperty('showLeftControls', true);
-  }
-
   setProperty<T extends keyof NgwWindowConfiguration>(property: T, value: NgwWindowConfiguration[T]) {
     this.displayProperties.set({
       ...this.displayProperties(),
