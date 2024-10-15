@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {TestAppComponent} from './test-app.component';
-import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
+import {NgwWindowControllerService} from "ngx-windows";
 
 describe('TestAppComponent', () => {
   let component: TestAppComponent;

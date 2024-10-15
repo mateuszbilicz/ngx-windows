@@ -1,8 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {CloseConfirmDialogComponent} from './close-confirm-dialog.component';
-import {NgwWindowControllerService} from "ngx-windows/src/lib/ngw-window/services/ngw-window-controller.service";
 import {signal} from "@angular/core";
+import {NgwWindowControllerService} from "ngx-windows";
 
 describe('CloseConfirmDialogComponent', () => {
   let component: CloseConfirmDialogComponent;
