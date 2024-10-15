@@ -18,6 +18,8 @@ This project is under ISC license.
 
 ## Installation
 
+Current not prepared for NPM version: `npm run update-ngx-windows`.
+
 ... TODO
 
 ## Usage
@@ -29,7 +31,6 @@ This project is under ISC license.
 2. Add NgwWindowsContainerComponent to your template
 
 ```angular17html
-
 <ngw-windows-container [style]="{width: '100vw', height: '100vh'}"/>
 ```
 
@@ -285,7 +286,8 @@ which means that you can use all properties and services inside `NgwWindowCompon
 Each window has its own instance of NgwWindowControllerService that can be accessed
 via `NgwWindowsManagerService.createWindow(...).onRegister$`
 or `NgwWindowsManagerService.findFN.service` (after initialization).
-
+It's also passed to window app component as
+required input `windowController: InputSignal<NgwWindowControllerService>`.
 
 <table>
   <caption>
@@ -295,6 +297,96 @@ or `NgwWindowsManagerService.findFN.service` (after initialization).
     <th>Property</th>
     <th>Type</th>
     <th>Description</th>
+  </tr>
+  <tr>
+    <td>properties</td>
+    <td>
+      <code>WritableSignal&lt;NgwWindowProps | undefined&gt;</code>
+    </td>
+    <td>
+      Window properties.
+    </td>
+  </tr>
+  <tr>
+    <td>onMenu$</td>
+    <td>
+      <code>Subject&lt;MouseEvent&gt;</code>
+    </td>
+    <td>
+      Menu button click Subject.
+    </td>
+  </tr>
+  <tr>
+    <td>onClose$</td>
+    <td>
+      <code>Subject&lt;MouseEvent&gt;</code>
+    </td>
+    <td>
+      Window Close Subject.
+    </td>
+  </tr>
+  <tr>
+    <td>leftControlsTemplate</td>
+    <td>
+      <code>TemplateRef&lt;any&gt;</code>
+    </td>
+    <td>
+      Window topbar left controls template (optional).
+    </td>
+  </tr>
+  <tr>
+    <td>rightControlsTemplate</td>
+    <td>
+      <code>TemplateRef&lt;any&gt;</code>
+    </td>
+    <td>
+      Window topbar right controls template (optional).
+    </td>
+  </tr>
+  <tr>
+    <td>windowNameTemplate</td>
+    <td>
+      <code>TemplateRef&lt;any&gt;</code>
+    </td>
+    <td>
+      Window topbar name template (optional).
+    </td>
+  </tr>
+  <tr>
+    <td>id</td>
+    <td>
+      <code>Signal&lt;string&gt;</code>
+    </td>
+    <td>
+      Read-only window id.
+    </td>
+  </tr>
+  <tr>
+    <td>name</td>
+    <td>
+      <code>Signal&lt;string&gt;</code>
+    </td>
+    <td>
+      Read-only window name.
+    </td>
+  </tr>
+  <tr>
+    <td>component</td>
+    <td>
+      <code>Signal&lt;string&gt;</code>
+    </td>
+    <td>
+      Read-only window component (app).
+    </td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>
+      <code>WriteableSignal&lt;any&gt;</code>
+    </td>
+    <td>
+      Read-only window data (any data passed to window via properties).
+    </td>
   </tr>
 </table>
 
@@ -313,18 +405,101 @@ or `NgwWindowsManagerService.findFN.service` (after initialization).
     <th>Description</th>
   </tr>
   <tr>
-    <td></td>
+    <td>moveWindow</td>
     <td>
-      <code></code>
+      <code>x: number</code>,
+      <code>y: number</code>
     </td>
     <td>
-      <code></code>
+      <code>void</code>
     </td>
-    <td></td>
+    <td>Moves window with checking max/min position to user viewport. Checks minimized and maximized state, if some of them is true, then cancels execution.</td>
+  </tr>
+  <tr>
+    <td>resizeWindow</td>
+    <td>
+      <code>width: number</code>,
+      <code>height: number</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>Resize window, uses window mix and max size. Cancels if window is minimized or maximized.</td>
+  </tr>
+  <tr>
+    <td>doNgwWindowPlacementIfPossible</td>
+    <td>
+      <code>x: number</code>,
+      <code>y: number</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>Checks possible window placement mode and if it's not "free", then applies this placement to window.</td>
+  </tr>
+  <tr>
+    <td>getPlacementMode</td>
+    <td>
+      <code>x: number</code>,
+      <code>y: number</code>
+    </td>
+    <td>
+      <code>WindowPlacementKeyName | undefined</code>
+    </td>
+    <td>Predicts window placement mode or undefined if it's "free".</td>
+  </tr>
+  <tr>
+    <td>isOverResizingPoint</td>
+    <td>
+      <code>x: number</code>,
+      <code>y: number</code>
+    </td>
+    <td>
+      <code>boolean</code>
+    </td>
+    <td>Checks distance to window resizing point and returns if mouse cursor is over this point.</td>
+  </tr>
+  <tr>
+    <td>minimize</td>
+    <td>
+      <code>none</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>Sets window minimized state. If current active window is focused (active), then deactivates it.</td>
+  </tr>
+  <tr>
+    <td>toggleMaximize</td>
+    <td>
+      <code>none</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>Toggles window maximized state.</td>
+  </tr>
+  <tr>
+    <td>setLocked</td>
+    <td>
+      <code>locked: boolean</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>Sets window locked state.</td>
+  </tr>
+  <tr>
+    <td>close</td>
+    <td>
+      <code>ev: MouseEvent</code>
+    </td>
+    <td>
+      <code>void</code>
+    </td>
+    <td>If window has preventClose option then emits onClose$ Subject, else calls removeWindow.</td>
   </tr>
 </table>
-
-... TODO: functions table: function, description
 
 # Styling
 
@@ -339,10 +514,8 @@ No test were written in current version.
 
 - [X] Search for unused imports after rewrite of services and fix them
 - [X] Add example bar with active&minimized windows
-- [ ] Readme API NgwWindowControllerService section - info about child services and its subjects
+- [X] Readme API NgwWindowControllerService section - info about child services and its subjects
   that can be used to handle placement, state and config changes
-- [ ] Create some example layout inside TestAppComponent
-- [ ] Add example with lazy-loading and loading screen on window
 - [ ] Write tests
 - [ ] Complete README.md
 - [ ] Make `projects/ngx-windows` separated library for easy installation and minimal package size
