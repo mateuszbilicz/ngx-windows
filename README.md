@@ -1038,8 +1038,69 @@ ngw-icon svg path {
 
 # Testing
 
-No test were written in current version.
-... TODO
+Running tests: `npm run test-ngx-windows`.
+
+<table>
+  <caption>
+    Test coverage
+  </caption>
+  <tr>
+    <th>Class</th>
+    <th>Has tests</th>
+    <th>Comments</th>
+  </tr>
+  <tr>
+    <td>NgwWindowsManagerService</td>
+    <td>
+      ☑️
+    </td>
+    <td>
+      Missing tests for <code>onPlacementPrediction</code> and <code>registerWindow</code>
+    </td>
+  </tr>
+  <tr>
+    <td>NgwWindowComponent</td>
+    <td>
+      ✅
+    </td>
+    <td>Full</td>
+  </tr>
+  <tr>
+    <td>NgwWindowStateService</td>
+    <td>
+      ✅
+    </td>
+    <td>Full</td>
+  </tr>
+  <tr>
+    <td>NgwWindowPlacementService</td>
+    <td>
+      ✅
+    </td>
+    <td>Full</td>
+  </tr>
+  <tr>
+    <td>NgwWindowControllerService</td>
+    <td>
+      ✅
+    </td>
+    <td>Full</td>
+  </tr>
+  <tr>
+    <td>NgwWindowConfigurationService</td>
+    <td>
+      ✅
+    </td>
+    <td>Full</td>
+  </tr>
+  <tr>
+    <td>IconComponent</td>
+    <td>
+      ✅
+    </td>
+    <td>Full</td>
+  </tr>
+</table>
 
 # TODO
 
@@ -1047,6 +1108,6 @@ No test were written in current version.
 - [X] Add example bar with active&minimized windows
 - [X] Readme API NgwWindowControllerService section - info about child services and its subjects
   that can be used to handle placement, state and config changes
-- [ ] Write tests
+- [X] Write tests
 - [ ] Complete README.md
 - [ ] Make `projects/ngx-windows` separated library for easy installation and minimal package size
