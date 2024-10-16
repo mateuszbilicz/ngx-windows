@@ -1,7 +1,7 @@
 {
   "name": "angular-windows",
   "description": "Simple Angular-based floating window containers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "ISC",
   "author": {
     "name": "Mateusz Bilicz",
