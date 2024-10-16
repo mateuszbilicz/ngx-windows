@@ -1,26 +1,16 @@
 # Angular Windows
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.6.
+Angular version: 18.0.0
 
 Previous versions of Angular aren't supported.
 
-### Version
-
-<b>1.0.0 - EARLY PREVIEW</b>
-
-I do not recommend using current version in commercial projects.
-
-### License
-
-This project is under ISC license.
+License: ISC
 
 # Using Angular Windows
 
 ## Installation
 
 Current not prepared for NPM version: `npm run update-ngx-windows`.
-
-... TODO
 
 Add ngx-windows style to your angular.json config file:
 
