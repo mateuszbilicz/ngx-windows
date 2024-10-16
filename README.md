@@ -1,6 +1,6 @@
 # Angular Windows
 
-Angular version: 18.0.0
+Angular version: 18.1.0
 
 Previous versions of Angular aren't supported.
 
