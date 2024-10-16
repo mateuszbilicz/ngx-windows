@@ -1,7 +1,8 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {NgwWindowsManagerService} from './ngw-windows-manager.service';
-import {Component, input} from '@angular/core';
-import {NgwWindowControllerService} from "ngx-windows";
+import {Component, input, NgZone} from '@angular/core';
+import {NgwWindowsContainerComponent} from "./ngw-windows-container/ngw-windows-container.component";
+import {NgwWindowControllerService} from "./ngw-window/services/ngw-window-controller.service";
 
 @Component({
   selector: 'app-test-win',
@@ -14,16 +15,43 @@ export class TestWinComponent {
   windowController = input.required<NgwWindowControllerService>();
 }
 
+@Component({
+  selector: 'app-test-parent',
+  standalone: true,
+  imports: [
+    NgwWindowsContainerComponent
+  ],
+  template: '<ngw-windows-container/>',
+  styles: ''
+})
+export class TestParentComponent {
+  constructor(public manager: NgwWindowsManagerService) {}
+}
+
 describe('NgwWindowsManagerService', () => {
-  let service: NgwWindowsManagerService;
+  let service: NgwWindowsManagerService,
+  fixture: ComponentFixture<TestParentComponent>,
+  zone: NgZone;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [TestParentComponent]
+    });
+    fixture = TestBed.createComponent(TestParentComponent);
     service = TestBed.inject(NgwWindowsManagerService);
+    zone = TestBed.inject(NgZone)
+    fixture.autoDetectChanges(true);
   });
 
   const createWin = () => {
     return service.createWindow({
+      name: 'Test Window',
+      component: TestWinComponent
+    });
+  }
+
+  const createWinInContainer = () => {
+    return fixture.componentInstance.manager.createWindow({
       name: 'Test Window',
       component: TestWinComponent
     });
@@ -38,18 +66,16 @@ describe('NgwWindowsManagerService', () => {
     expect(win.id).toBeTruthy();
   });
 
-  it('should have window registered', waitForAsync(() => {
-    spyOn(service, 'createWindow').and.callThrough();
-    let win = createWin();
-    win.onRegister$
-      .subscribe({
-        next: svc => {
-          expect(svc.id()).toBeTruthy();
-        },
-        error: () => fail('Expected a service')
-      });
-    expect(service.createWindow).toHaveBeenCalled();
-  }));
+  it('should have window registered', async () => {
+    const registerSpy = jasmine.createSpyObj('Subject', ['next', 'complete']);
+    let win = createWinInContainer();
+    win.onRegister$ = registerSpy;
+    zone.run(() => {
+      fixture.detectChanges();
+    });
+    await fixture.whenRenderingDone();
+    expect(registerSpy.next).toHaveBeenCalled();
+  });
 
   it('should remove window after creation', waitForAsync(() => {
     let win = createWin();
@@ -82,62 +108,55 @@ describe('NgwWindowsManagerService', () => {
     expect(service.getOpenWindows()).toContain(win);
   });
 
-  it('main window should be in maximized list', waitForAsync(() => {
-    spyOn(service, 'createWindow').and.callThrough();
-    let win = createWin();
-    win.onRegister$
-      .subscribe({
-        next: svc => {
-          svc.toggleMaximize();
-          expect(service.getMaximizedWindows()).toContain(win);
-        },
-        error: () => fail('Expected a service')
-      });
-    expect(service.createWindow).toHaveBeenCalled();
-  }));
+  it('main window should be in maximized list', async () => {
+    let win = createWinInContainer();
+    zone.run(() => {
+      fixture.detectChanges();
+    });
+    await fixture.whenRenderingDone();
+    win.service!.toggleMaximize();
+    expect(
+      fixture.componentInstance.manager.getMaximizedWindows()
+    ).toContain(win);
+  });
 
-  it('main window should be in minimized list', waitForAsync(() => {
-    spyOn(service, 'createWindow').and.callThrough();
-    let win = createWin();
-    win.onRegister$
-      .subscribe({
-        next: svc => {
-          svc.minimize();
-          expect(service.getMinimizedWindows()).toContain(win);
-        },
-        error: () => fail('Expected a service')
-      });
-    expect(service.createWindow).toHaveBeenCalled();
-  }));
+  it('main window should be in minimized list', async () => {
+    let win = createWinInContainer();
+    zone.run(() => {
+      fixture.detectChanges();
+    });
+    await fixture.whenRenderingDone();
+    win.service!.toggleMaximize();
+    win.service!.minimize();
+    expect(
+      fixture.componentInstance.manager.getMinimizedWindows()
+    ).toContain(win);
+  });
 
-  it('main window should be activated', waitForAsync(() => {
-    spyOn(service, 'createWindow').and.callThrough();
-    let win = createWin();
-    service.activateWindow(win.id);
-    win.onRegister$
-      .subscribe({
-        next: svc => {
-          expect(service.getActiveWindow()).toBe(win);
-        },
-        error: () => fail('Expected a service')
-      });
-    expect(service.createWindow).toHaveBeenCalled();
-  }));
+  it('main window should be activated', async () => {
+    let win = createWinInContainer();
+    zone.run(() => {
+      fixture.detectChanges();
+    });
+    await fixture.whenRenderingDone();
+    fixture.componentInstance.manager!.activateWindow(win.id);
+    expect(
+      fixture.componentInstance.manager.getActiveWindow()
+    ).toBe(win);
+  });
 
-  it('main window should be not activated', waitForAsync(() => {
-    spyOn(service, 'createWindow').and.callThrough();
-    let win = createWin();
-    service.activateWindow(win.id);
-    win.onRegister$
-      .subscribe({
-        next: svc => {
-          service.deactivateCurrentActiveWindow();
-          expect(service.getActiveWindow()).toBeFalsy();
-        },
-        error: () => fail('Expected a service')
-      });
-    expect(service.createWindow).toHaveBeenCalled();
-  }));
+  it('main window should be not activated', async () => {
+    let win = createWinInContainer();
+    zone.run(() => {
+      fixture.detectChanges();
+    });
+    await fixture.whenRenderingDone();
+    fixture.componentInstance.manager!.activateWindow(win.id);
+    fixture.componentInstance.manager!.deactivateCurrentActiveWindow();
+    expect(
+      fixture.componentInstance.manager.getActiveWindow()
+    ).toBeFalsy();
+  });
 
   it('all windows should be removed', () => {
     createWin();
