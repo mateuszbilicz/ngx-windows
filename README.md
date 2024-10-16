@@ -64,6 +64,34 @@ export class YourComponent {
 }
 ```
 
+Your window component <b>must</b> contain windowController input!
+
+```typescript
+  windowController = input.required<NgwWindowControllerService>();
+```
+
+Also, remember to set window placement after register:
+
+```typescript
+constructor(private nwm: NgwWindowsManagerService) {
+  const win = this.nwm.createWindow({
+    name: 'My Window',
+    component: TestCpmComponent
+  });
+
+  win.onRegister$
+    .pipe(takeUntilDestroyed())
+    .subscribe(service => {
+      service.placementSvc.setAll(
+        800,
+        600,
+        30,
+        30
+      );
+    });
+}
+```
+
 ## HowItWorks
 
 When you call `NgwWindowsManagerService.createWindow`
