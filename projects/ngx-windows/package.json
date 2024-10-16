@@ -1,6 +1,20 @@
 {
   "name": "ngx-windows",
   "version": "1.0.0",
+  "description": "Simple Angular-based floating window containers",
+  "license": "ISC",
+  "author": {
+    "name": "Mateusz Bilicz",
+    "url": "https://mateuszbilicz.pl"
+  },
+  "repository": "https://github.com/mateuszbilicz/ngx-windows",
+  "homepage": "https://github.com/mateuszbilicz/ngx-windows",
+  "private": false,
+  "keywords": [
+    "Angular",
+    "floating window",
+    "HTML Windows"
+  ],
   "peerDependencies": {
     "@angular/common": "^18.1.0",
     "@angular/core": "^18.1.0"
@@ -9,5 +23,4 @@
     "tslib": "^2.3.0"
   },
   "sideEffects": false,
-  "license": "ISC"
 }

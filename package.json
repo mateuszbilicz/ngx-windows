@@ -7,7 +7,9 @@
     "name": "Mateusz Bilicz",
     "url": "https://mateuszbilicz.pl"
   },
-  "private": true,
+  "repository": "https://github.com/mateuszbilicz/ngx-windows",
+  "homepage": "https://github.com/mateuszbilicz/ngx-windows",
+  "private": false,
   "exports": {
     "default": [
       "projects/ngx-windows/src/public-api.ts"
@@ -18,7 +20,6 @@
     "floating window",
     "HTML Windows"
   ],
-  "repository": "https://github.com/mateuszbilicz/ngx-windows",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -28,7 +29,7 @@
     "update-ngx-windows": "ng build ngx-windows; npm pack ./dist/ngx-windows; npm install ./ngx-windows-0.0.1.tgz",
     "test": "ng test",
     "test-ngx-windows": "ng test ngx-windows",
-    "publish": "ng build ngx-windows --prod"
+    "publish": "ng build ngx-windows; cd dist/ngx-windows; npm publish"
   },
   "dependencies": {
     "@angular/animations": "^18.0.0",
