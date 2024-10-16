@@ -17,8 +17,8 @@
         <ng-container *ngTemplateOutlet="windowControllerService.windowNameTemplate"/>
       } @else {
         <span class="ngw-window-title">
-        {{ windowControllerService.name() }}
-      </span>
+          {{ windowControllerService.name() }}
+        </span>
       }
     }
     @if (configurationSvc.showRightControls()) {
