@@ -1,5 +1,4 @@
 import {TestBed} from '@angular/core/testing';
-
 import {NgwWindowPlacementService} from './ngw-window-placement.service';
 
 describe('NgwWindowPlacementService', () => {

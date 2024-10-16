@@ -27,7 +27,8 @@
     "build-ngx-windows": "ng build ngx-windows",
     "update-ngx-windows": "ng build ngx-windows; npm pack ./dist/ngx-windows; npm install ./ngx-windows-0.0.1.tgz",
     "test": "ng test",
-    "test-ngx-windows": "ng test ngx-windows"
+    "test-ngx-windows": "ng test ngx-windows",
+    "publish": "ng build ngx-windows --prod"
   },
   "dependencies": {
     "@angular/animations": "^18.0.0",

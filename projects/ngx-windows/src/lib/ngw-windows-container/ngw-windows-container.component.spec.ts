@@ -1,5 +1,4 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {NgwWindowsContainerComponent} from './ngw-windows-container.component';
 
 describe('NgwWindowsContainerComponent', () => {

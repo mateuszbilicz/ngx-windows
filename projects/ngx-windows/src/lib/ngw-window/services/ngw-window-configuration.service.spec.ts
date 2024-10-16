@@ -1,7 +1,6 @@
 import {TestBed} from '@angular/core/testing';
-
 import {NgwWindowConfigurationService} from './ngw-window-configuration.service';
-import {NgwWindowDefaultConfiguration} from "ngx-windows";
+import {NgwWindowDefaultConfiguration} from "../../api/ngw-windows.api";
 
 describe('NgwWindowConfigurationService', () => {
   let service: NgwWindowConfigurationService;
