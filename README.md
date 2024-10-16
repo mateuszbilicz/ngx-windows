@@ -1094,10 +1094,4 @@ Running tests: `npm run test-ngx-windows`.
 
 # TODO
 
-- [X] Search for unused imports after rewrite of services and fix them
-- [X] Add example bar with active&minimized windows
-- [X] Readme API NgwWindowControllerService section - info about child services and its subjects
-  that can be used to handle placement, state and config changes
-- [X] Write tests
-- [ ] Complete README.md
-- [ ] Make `projects/ngx-windows` separated library for easy installation and minimal package size
+- [ ] Fix ExpressionChangedAfterItHasBeenCheckedError error after window creation
