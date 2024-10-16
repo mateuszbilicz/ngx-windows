@@ -10,7 +10,8 @@ License: ISC
 
 ## Installation
 
-Current not prepared for NPM version: `npm run update-ngx-windows`.
+Install ngx-windows: `npm i ngx-windows`.
+Edit, build and use in example app: `npm run update-ngx-windows`.
 
 Add ngx-windows style to your angular.json config file:
 
