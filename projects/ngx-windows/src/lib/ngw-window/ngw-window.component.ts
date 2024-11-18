@@ -42,17 +42,81 @@ import {NgwWindowProps} from "../models/ngw-window-properties.model";
   styles: '',
   encapsulation: ViewEncapsulation.None
 })
+/**
+ * @class NgwWindowComponent
+ * @description Window component.
+ */
 export class NgwWindowComponent
   implements AfterViewInit {
+  /**
+   * @property properties
+   * @description Window properties input.
+   */
   properties = input.required<NgwWindowProps>();
+
+  /**
+   * @property initialized
+   * @description Window initialized state - used for NgwWindowsManagerService.
+   * @default false
+   */
   initialized = signal<boolean>(false);
+
+  /**
+   * @property topbar
+   * @description Window topbar element reference.
+   * @default undefined
+   * @optional
+   */
   topbar?: ElementRef;
+
+  /**
+   * @property configurationSvc
+   * @description Window configuration service.
+   */
   configurationSvc = inject(NgwWindowConfigurationService);
+
+  /**
+   * @property placementSvc
+   * @description Window placement service.
+   */
   placementSvc = inject(NgwWindowPlacementService);
+
+  /**
+   * @property stateSvc
+   * @description Window placement service.
+   */
   stateSvc = inject(NgwWindowStateService);
+
+  /**
+   * @property isResizing
+   * @description Window resizing state used in events to control placement.
+   * @default false
+   * @private
+   */
   private isResizing = false;
+
+  /**
+   * @property isMoving
+   * @description Window moving state used in events to control placement.
+   * @default false
+   * @private
+   */
   private isMoving = false;
+
+  /**
+   * @property mouseMoveListener
+   * @description Window mouse move event listener function.
+   * @default undefined
+   * @private
+   */
   private mouseMoveListener: Subscription | undefined;
+
+  /**
+   * @property isOverResizingPoint
+   * @description Information about mouse hovering over window resizing point.
+   * @default false
+   * @private
+   */
   private isOverResizingPoint: boolean = false;
 
   constructor(public nwm: NgwWindowsManagerService,
@@ -75,78 +139,154 @@ export class NgwWindowComponent
     }, {allowSignalWrites: true});
   }
 
+  /**
+   * @property __topbar
+   * @description topbar property setter.
+   */
   @ViewChild('_topbar') set __topbar(e: ElementRef) {
     if (e) this.topbar = e;
   }
 
+  /**
+   * @property isMinimized
+   * @description Returns window minimized state.
+   */
   @HostBinding('class.minimized') get isMinimized() {
     return this.stateSvc.minimized();
   }
 
+  /**
+   * @property isMaximized
+   * @description Returns window maximized state.
+   */
   @HostBinding('class.maximized') get isMaximized() {
     return this.stateSvc.maximized();
   }
 
+  /**
+   * @property isFocused
+   * @description Returns window focused state.
+   */
   @HostBinding('class.focused') get isFocused() {
     return this.stateSvc.focused();
   }
 
+  /**
+   * @property isLocked
+   * @description Returns window locked state.
+   */
   @HostBinding('class.locked') get isLocked() {
     return this.stateSvc.locked();
   }
 
+  /**
+   * @property isFullScreen
+   * @description Returns window FullScreen state.
+   */
   @HostBinding('class.fullscreen') get isFullScreen() {
     return this.placementSvc.placementMode() == 'fullScreen';
   }
 
+  /**
+   * @property canResize
+   * @description Returns if mouse cursor is over resizing point.
+   */
   @HostBinding('class.over-resizing-point') get canResize() {
     return this.isOverResizingPoint;
   }
 
+  /**
+   * @property width
+   * @description Returns window width in pixels.
+   */
   @HostBinding('style.width') get width() {
     return this.placementSvc.width() + 'px';
   }
 
+  /**
+   * @property height
+   * @description Returns window height in pixels.
+   */
   @HostBinding('style.height') get height() {
     return this.placementSvc.height() + 'px';
   }
 
+  /**
+   * @property left
+   * @description Returns window offsetX in pixels.
+   */
   @HostBinding('style.left') get left() {
     return this.placementSvc.offsetX() + 'px';
   }
 
+  /**
+   * @property top
+   * @description Returns window offsetY in pixels.
+   */
   @HostBinding('style.top') get top() {
     return this.placementSvc.offsetY() + 'px';
   }
 
+  /**
+   * @property resizing
+   * @description Returns window resizing state.
+   */
   @HostBinding('class.resizing') get resizing() {
     return this.isResizing;
   }
 
+  /**
+   * @property moving
+   * @description Returns window moving state.
+   */
   @HostBinding('class.moving') get moving() {
     return this.isMoving;
   }
 
+  /**
+   * @property isBorderless
+   * @description Returns window borderless configuration property.
+   */
   @HostBinding('class.borderless') get isBorderless() {
     return this.configurationSvc.borderless();
   }
 
+  /**
+   * @property noShadow
+   * @description Returns window noShadow configuration property.
+   */
   @HostBinding('class.noshadow') get hasNoShadow() {
     return this.configurationSvc.noShadow();
   }
 
+  /**
+   * @property isTransparent
+   * @description Returns window isTransparent configuration property.
+   */
   @HostBinding('class.transparent') get isTransparent() {
     return this.configurationSvc.transparent();
   }
 
+  /**
+   * @property background
+   * @description Returns window background configuration property.
+   */
   @HostBinding('style.background') get background() {
     return this.configurationSvc.background();
   }
 
+  /**
+   * @property backdropFilter
+   * @description Returns window backdropFilter configuration property.
+   */
   @HostBinding('style.backdrop-filter') get backdropFilter() {
     return this.configurationSvc.backdropFilter();
   }
 
+  /**
+   * @property getContentHeight
+   * @description Returns window content container height (window height - topbar height).
+   */
   get getContentHeight(): string {
     if (this.topbar?.nativeElement) {
       return (this.placementSvc.height() - this.topbar.nativeElement.clientHeight) + 'px'
@@ -154,11 +294,21 @@ export class NgwWindowComponent
     return this.height;
   }
 
+  /**
+   * @function activate
+   * @description Window activation through user click interaction.
+   * @returns void
+   */
   @HostListener('click') activate() {
     if (this.stateSvc.focused() || this.stateSvc.locked()) return;
     this.nwm.activateWindow(this.windowControllerService.id());
   }
 
+  /**
+   * @function ngAfterViewInit
+   * @description Angular AfterViewInit component hook. Initializes mousedown and mousemove events.
+   * @returns void
+   */
   ngAfterViewInit() {
     fromEvent(this.el.nativeElement, 'mousedown')
       .pipe(
@@ -206,6 +356,13 @@ export class NgwWindowComponent
       });
   }
 
+  /**
+   * @function activateMoveEvent
+   * @description Starts mousemove event listener for moving window.
+   * @param startX - initial X coordinate of mouse movement
+   * @param startY - initial Y coordinate of mouse movement
+   * @returns Subscription
+   */
   private activateMoveEvent(startX: number, startY: number) {
     return fromEvent(window, 'mousemove')
       .pipe(
@@ -226,13 +383,16 @@ export class NgwWindowComponent
             );
             this.nwm.onPlacementPrediction((placementMode && WindowPlacements[placementMode]) ?? undefined);
           }
-          ev.preventDefault();
-          ev.stopPropagation();
-          ev.stopImmediatePropagation();
+          this.stopEv(ev);
         }
       });
   }
 
+  /**
+   * @function activateResizeEvent
+   * @description Starts mousemove event for resizing window.
+   * @returns Subscription
+   */
   private activateResizeEvent() {
     return fromEvent(window, 'mousemove')
       .pipe(
@@ -246,13 +406,16 @@ export class NgwWindowComponent
             ev.clientX - this.placementSvc.offsetX(),
             ev.clientY - this.placementSvc.offsetY()
           );
-          ev.preventDefault();
-          ev.stopPropagation();
-          ev.stopImmediatePropagation();
+          this.stopEv(ev);
         }
       });
   }
 
+  /**
+   * @function activateMouseUpEvent
+   * @description Starts mouseup events for stopping window resizing & moving.
+   * @returns void
+   */
   private activateMouseUpEvent() {
     let stop = new ReplaySubject<boolean>(1),
       doStop = () => {
@@ -286,6 +449,12 @@ export class NgwWindowComponent
       });
   }
 
+  /**
+   * @function stopEv
+   * @description Function to prevent event default, stop propagation and stop immediate propagation.
+   * @param ev - event to be stopped
+   * @returns void
+   */
   stopEv(ev: Event) {
     ev.preventDefault();
     ev.stopPropagation();

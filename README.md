@@ -138,7 +138,7 @@ which means that you can use all properties and services inside `NgwWindowCompon
       <code>WritableSignal&lt;ActiveNgwWindowProps[]&gt;</code>
     </td>
     <td>
-      Full windows list
+      Full windows list.
     </td>
   </tr>
   <tr>

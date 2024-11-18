@@ -1,7 +1,7 @@
 {
   "name": "angular-windows",
   "description": "Simple Angular-based floating window containers",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "license": "ISC",
   "author": {
     "name": "Mateusz Bilicz",
@@ -26,7 +26,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "build-ngx-windows": "ng build ngx-windows",
-    "update-ngx-windows": "ng build ngx-windows; npm pack ./dist/ngx-windows; npm install ./ngx-windows-1.0.2.tgz",
+    "update-ngx-windows": "ng build ngx-windows; npm pack ./dist/ngx-windows; npm install ./ngx-windows-1.0.3.tgz",
     "test": "ng test",
     "test-ngx-windows": "ng test ngx-windows",
     "publish": "ng build ngx-windows; cd dist/ngx-windows; npm publish"
@@ -40,7 +40,7 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
-    "ngx-windows": "file:ngx-windows-1.0.2.tgz",
+    "ngx-windows": "file:ngx-windows-1.0.3.tgz",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

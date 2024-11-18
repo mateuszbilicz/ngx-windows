@@ -11,12 +11,26 @@ export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu'
   styles: '',
   encapsulation: ViewEncapsulation.None
 })
+/**
+ * @class IconComponent
+ * @description Window icon component - contains all basic icon types for window topbar.
+ */
 export class IconComponent {
+  /**
+   * @property type
+   * @description Icon type.
+   * @default 'close'
+   */
   @Input() type: NgwIconType = 'close';
 
   constructor(private satanizer: DomSanitizer) {
   }
 
+  /**
+   * @property iconSvgHTML
+   * @description Returns icon SVG content for specified icon type.
+   * @returns void
+   */
   get iconSvgHTML(): string {
     switch (this.type) {
       case 'minimize':
@@ -34,7 +48,14 @@ export class IconComponent {
     }
   }
 
+  /**
+   * @property iconSvg
+   * @description Returns icon in sanitized SafeHtml.
+   * @returns SafeHtml
+   */
   get iconSvg(): SafeHtml {
-    return this.satanizer.bypassSecurityTrustHtml(this.iconSvgHTML);
+    return this.satanizer.bypassSecurityTrustHtml(
+      this.iconSvgHTML
+    );
   }
 }
