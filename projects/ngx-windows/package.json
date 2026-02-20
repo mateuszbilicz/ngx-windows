@@ -1,6 +1,6 @@
 {
   "name": "ngx-windows",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Simple Angular-based floating window containers",
   "license": "ISC",
   "author": {
@@ -16,8 +16,8 @@
     "HTML Windows"
   ],
   "peerDependencies": {
-    "@angular/common": "^19.2.18",
-    "@angular/core": "^19.2.18"
+    "@angular/common": "^20.3.16",
+    "@angular/core": "^20.3.16"
   },
   "dependencies": {
     "tslib": "^2.3.0"

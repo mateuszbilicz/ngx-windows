@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  effect,
   ElementRef,
   HostBinding,
   HostListener,
@@ -17,7 +16,7 @@ import {NgComponentOutlet, NgTemplateOutlet} from "@angular/common";
 import {IconComponent} from "../icon/icon.component";
 import {NgwWindowsManagerService} from "../ngw-windows-manager.service";
 import {fromEvent, ReplaySubject, Subscription, takeUntil, throttleTime} from "rxjs";
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {takeUntilDestroyed, toObservable} from "@angular/core/rxjs-interop";
 import {WindowPlacements} from "../models/placement.model";
 import {NgwWindowControllerService} from "./services/ngw-window-controller.service";
 import {NgwWindowPlacementService} from "./services/ngw-window-placement.service";
@@ -50,6 +49,10 @@ import {NgwWindowProps} from "../models/ngw-window-properties.model";
  */
 export class NgwWindowComponent
   implements AfterViewInit {
+  nwm = inject(NgwWindowsManagerService);
+  windowControllerService = inject(NgwWindowControllerService);
+  protected readonly el = inject(ElementRef);
+  protected readonly destroyRef = inject(DestroyRef);
   /**
    * @property properties
    * @description Window properties input.
@@ -121,24 +124,26 @@ export class NgwWindowComponent
    */
   private isOverResizingPoint: boolean = false;
 
-  constructor(public nwm: NgwWindowsManagerService,
-              private el: ElementRef,
-              private destroyRef: DestroyRef,
-              public windowControllerService: NgwWindowControllerService) {
-    effect(() => {
-      this.windowControllerService.properties.set(
-        this.properties()
-      );
-    }, {allowSignalWrites: true});
-    effect(() => {
-      const id = this.windowControllerService.id();
-      this.initialized.set(
-        !!id
-      );
-      if (id) {
-        this.nwm.registerWindow(id, this.windowControllerService);
-      }
-    }, {allowSignalWrites: true});
+  constructor() {
+    toObservable(this.properties)
+      .pipe(
+        takeUntilDestroyed()
+      )
+      .subscribe((properties) => {
+        this.windowControllerService.properties.set(properties);
+      });
+    toObservable(this.windowControllerService.id)
+      .pipe(
+        takeUntilDestroyed()
+      )
+      .subscribe((id) => {
+        this.initialized.set(
+          !!id
+        );
+        if (id) {
+          this.nwm.registerWindow(id, this.windowControllerService);
+        }
+      });
   }
 
   /**
