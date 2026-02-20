@@ -1,6 +1,6 @@
 # Angular Windows
 
-Angular version: 20.3.16
+Angular version: 21.1.5
 
 Previous versions of Angular aren't supported.
 
@@ -1119,8 +1119,4 @@ Running tests: `npm run test-ngx-windows`.
     </td>
     <td>Full</td>
   </tr>
-</table>
-
-# TODO
-
-- [ ] Fix ExpressionChangedAfterItHasBeenCheckedError error after window creation
+</table>`
