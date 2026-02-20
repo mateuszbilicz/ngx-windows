@@ -30,7 +30,7 @@ Add ngx-windows style to your angular.json config file:
 
 2. Add NgwWindowsContainerComponent to your template
 
-```angular17html
+```angular21html
 <ngw-windows-container [style]="{width: '100vw', height: '100vh'}"/>
 ```
 

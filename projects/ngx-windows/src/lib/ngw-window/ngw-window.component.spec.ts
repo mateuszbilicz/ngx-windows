@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActiveNgwWindowProps} from "../models/ngw-window-properties.model";
-import {Component, input, NgZone} from "@angular/core";
+import {Component, input} from "@angular/core";
 import {NgwWindowControllerService} from "./services/ngw-window-controller.service";
 import {NgwWindowsContainerComponent} from "../ngw-windows-container/ngw-windows-container.component";
 import {NgwWindowsManagerService} from "../ngw-windows-manager.service";
@@ -33,7 +33,6 @@ export class TestParentComponent {
 
 describe('NgwWindowComponent', () => {
   let fixture: ComponentFixture<TestParentComponent>,
-    zone: NgZone,
     win: ActiveNgwWindowProps,
     winElement: HTMLElement;
 
@@ -43,15 +42,12 @@ describe('NgwWindowComponent', () => {
     })
       .compileComponents();
     fixture = TestBed.createComponent(TestParentComponent);
-    zone = TestBed.inject(NgZone)
     fixture.autoDetectChanges(true);
     win = fixture.componentInstance.manager.createWindow({
       name: 'Test window',
       component: TestWinComponent
     });
-    zone.run(() => {
-      fixture.detectChanges();
-    });
+    fixture.detectChanges();
     await fixture.whenRenderingDone();
     winElement = fixture.nativeElement.children[0]!.children[0];
   });

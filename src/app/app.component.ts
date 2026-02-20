@@ -8,13 +8,14 @@ import {ActiveWindowsBarComponent} from "./active-windows-bar/active-windows-bar
 import {NgwWindowsContainerComponent, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
-    selector: 'app-root',
-    imports: [NgwWindowsContainerComponent, ActiveWindowsBarComponent],
-    providers: [
-        NgwWindowsManagerService
-    ],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.scss'
+  selector: 'app-root',
+  standalone: true,
+  imports: [NgwWindowsContainerComponent, ActiveWindowsBarComponent],
+  providers: [
+    NgwWindowsManagerService
+  ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
 })
 export class AppComponent {
   constructor(public nwm: NgwWindowsManagerService,

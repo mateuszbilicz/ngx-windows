@@ -1,6 +1,6 @@
 # NgxWindows
 
-Angular version: 18.1.0
+Angular version: 21.1.5
 
 Previous versions of Angular aren't supported.
 
@@ -10,7 +10,7 @@ License: ISC
 
 ## Installation
 
-Run `npm install ngx-windows`.
+Install ngx-windows: `npm i ngx-windows`.
 
 Add ngx-windows style to your angular.json config file:
 
@@ -29,7 +29,7 @@ Add ngx-windows style to your angular.json config file:
 
 2. Add NgwWindowsContainerComponent to your template
 
-```angular18html
+```angular21html
 <ngw-windows-container [style]="{width: '100vw', height: '100vh'}"/>
 ```
 
@@ -121,7 +121,7 @@ which means that you can use all properties and services inside `NgwWindowCompon
       <code>WritableSignal&lt;ActiveNgwWindowProps[]&gt;</code>
     </td>
     <td>
-      Full windows list
+      Full windows list.
     </td>
   </tr>
   <tr>

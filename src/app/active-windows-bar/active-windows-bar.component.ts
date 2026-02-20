@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, ViewEncapsulation} from '@angular/core';
 import {ActiveNgwWindowProps, IconComponent, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
@@ -12,14 +12,12 @@ import {ActiveNgwWindowProps, IconComponent, NgwWindowsManagerService} from "ngx
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActiveWindowsBarComponent {
+  protected readonly ngwWindowsManagerService = inject(NgwWindowsManagerService);
   windowsFiltered = computed(() =>
     this.ngwWindowsManagerService.activeWindows()
       .filter(win => !win.service?.data()?.skipInTaskbar)
   );
   activeWindow = computed(() => this.ngwWindowsManagerService.currentActiveWindow());
-
-  constructor(private ngwWindowsManagerService: NgwWindowsManagerService) {
-  }
 
   activateWindow(windowId: string) {
     if (this.ngwWindowsManagerService.currentActiveWindow()?.id === windowId) {

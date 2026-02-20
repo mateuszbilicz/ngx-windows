@@ -1,5 +1,7 @@
-import {ChangeDetectionStrategy, Component, input, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Injector, input, ViewEncapsulation} from '@angular/core';
 import {NgwWindowControllerService, NgwWindowsManagerService} from "ngx-windows";
+import {takeUntilDestroyed, toObservable} from "@angular/core/rxjs-interop";
+import {filter, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-close-confirm-dialog',
@@ -9,15 +11,20 @@ import {NgwWindowControllerService, NgwWindowsManagerService} from "ngx-windows"
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CloseConfirmDialogComponent
-  implements OnInit {
+export class CloseConfirmDialogComponent {
+  protected readonly nwm = inject(NgwWindowsManagerService);
+  protected readonly injector = inject(Injector);
   windowController = input.required<NgwWindowControllerService>();
 
-  constructor(private nwm: NgwWindowsManagerService) {
-  }
-
-  ngOnInit() {
-    this.windowController().data().lockParent();
+  constructor() {
+    toObservable(this.windowController)
+      .pipe(
+        takeUntilDestroyed(),
+        filter(winC => !!winC),
+        switchMap((winC) => toObservable(winC.data, {injector: this.injector})),
+        filter(data => !!data)
+      )
+      .subscribe((data) => data.lockParent())
   }
 
   cancel() {

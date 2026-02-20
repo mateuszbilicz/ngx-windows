@@ -1,43 +1,43 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {NgwWindowsManagerService} from './ngw-windows-manager.service';
-import {Component, input, NgZone} from '@angular/core';
+import {Component, input} from '@angular/core';
 import {NgwWindowsContainerComponent} from "./ngw-windows-container/ngw-windows-container.component";
 import {NgwWindowControllerService} from "./ngw-window/services/ngw-window-controller.service";
 
 @Component({
-    selector: 'app-test-win',
-    imports: [],
-    template: '<span>Test window works!</span>',
-    styles: ''
+  selector: 'app-test-win',
+  imports: [],
+  template: '<span>Test window works!</span>',
+  styles: ''
 })
 export class TestWinComponent {
   windowController = input.required<NgwWindowControllerService>();
 }
 
 @Component({
-    selector: 'app-test-parent',
-    imports: [
-        NgwWindowsContainerComponent
-    ],
-    template: '<ngw-windows-container/>',
-    styles: ''
+  selector: 'app-test-parent',
+  imports: [
+    NgwWindowsContainerComponent
+  ],
+  template: '<ngw-windows-container/>',
+  styles: ''
 })
 export class TestParentComponent {
-  constructor(public manager: NgwWindowsManagerService) {}
+  constructor(public manager: NgwWindowsManagerService) {
+  }
 }
 
 describe('NgwWindowsManagerService', () => {
   let service: NgwWindowsManagerService,
-  fixture: ComponentFixture<TestParentComponent>,
-  zone: NgZone;
+    fixture: ComponentFixture<TestParentComponent>,
 
-  beforeEach(() => {
+    beforeEach
+  (() => {
     TestBed.configureTestingModule({
       imports: [TestParentComponent]
     });
     fixture = TestBed.createComponent(TestParentComponent);
     service = TestBed.inject(NgwWindowsManagerService);
-    zone = TestBed.inject(NgZone)
     fixture.autoDetectChanges(true);
   });
 
@@ -68,9 +68,7 @@ describe('NgwWindowsManagerService', () => {
     const registerSpy = jasmine.createSpyObj('Subject', ['next', 'complete']);
     let win = createWinInContainer();
     win.onRegister$ = registerSpy;
-    zone.run(() => {
-      fixture.detectChanges();
-    });
+    fixture.detectChanges();
     await fixture.whenRenderingDone();
     expect(registerSpy.next).toHaveBeenCalled();
   });
@@ -108,9 +106,7 @@ describe('NgwWindowsManagerService', () => {
 
   it('main window should be in maximized list', async () => {
     let win = createWinInContainer();
-    zone.run(() => {
-      fixture.detectChanges();
-    });
+    fixture.detectChanges();
     await fixture.whenRenderingDone();
     win.service!.toggleMaximize();
     expect(
@@ -120,9 +116,7 @@ describe('NgwWindowsManagerService', () => {
 
   it('main window should be in minimized list', async () => {
     let win = createWinInContainer();
-    zone.run(() => {
-      fixture.detectChanges();
-    });
+    fixture.detectChanges();
     await fixture.whenRenderingDone();
     win.service!.toggleMaximize();
     win.service!.minimize();
@@ -133,9 +127,7 @@ describe('NgwWindowsManagerService', () => {
 
   it('main window should be activated', async () => {
     let win = createWinInContainer();
-    zone.run(() => {
-      fixture.detectChanges();
-    });
+    fixture.detectChanges();
     await fixture.whenRenderingDone();
     fixture.componentInstance.manager!.activateWindow(win.id);
     expect(
@@ -145,9 +137,7 @@ describe('NgwWindowsManagerService', () => {
 
   it('main window should be not activated', async () => {
     let win = createWinInContainer();
-    zone.run(() => {
-      fixture.detectChanges();
-    });
+    fixture.detectChanges();
     await fixture.whenRenderingDone();
     fixture.componentInstance.manager!.activateWindow(win.id);
     fixture.componentInstance.manager!.deactivateCurrentActiveWindow();
