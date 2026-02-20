@@ -1,31 +1,44 @@
-import {Component, effect, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {NgwWindowControllerService} from "ngx-windows";
+import {takeUntilDestroyed, toObservable} from "@angular/core/rxjs-interop";
+import {filter, map, switchMap, tap, timer} from "rxjs";
 
 @Component({
   selector: 'app-test-app',
-  standalone: true,
   imports: [],
   templateUrl: './test-app.component.html',
-  styleUrl: './test-app.component.scss'
+  styleUrl: './test-app.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestAppComponent {
   windowController = input.required<NgwWindowControllerService>();
 
   constructor() {
-    effect(() => {
-      let configSvc = this.windowController().configurationSvc;
-      configSvc.displayProperties.set({
-        // transparent: true,
-        // background: 'rgba(235, 235, 235, .75)',
-        backdropFilter: 'blur(2px)',
-        showTopBar: false,
-        resizeable: false,
-        moveable: false,
-        noShadow: true,
-        allowOutboundMovements: true
-      });
-
-      setTimeout(() => {
+    toObservable(this.windowController)
+      .pipe(
+        takeUntilDestroyed(),
+        filter((winC) => !!winC),
+        map((winC) => winC.configurationSvc),
+        tap((configSvc) => {
+          configSvc.displayProperties.set({
+            // transparent: true,
+            // background: 'rgba(235, 235, 235, .75)',
+            backdropFilter: 'blur(2px)',
+            showTopBar: false,
+            resizeable: false,
+            moveable: false,
+            noShadow: true,
+            allowOutboundMovements: true
+          });
+        }),
+        switchMap((configSvc) =>
+          timer(1000)
+            .pipe(
+              map(() => configSvc)
+            )
+        )
+      )
+      .subscribe((configSvc) => {
         configSvc.appendProperties({
           showTopBar: true,
           resizeable: true,
@@ -34,7 +47,6 @@ export class TestAppComponent {
           borderless: true,
           allowPlacementAlignment: true
         });
-      }, 1000);
-    }, {allowSignalWrites: true});
+      });
   }
 }

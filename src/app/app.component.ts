@@ -1,5 +1,4 @@
 import {Component, DestroyRef} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
 import {TestAppComponent} from "./test-app/test-app.component";
 import {
   CloseConfirmDialogExampleComponent
@@ -9,14 +8,13 @@ import {ActiveWindowsBarComponent} from "./active-windows-bar/active-windows-bar
 import {NgwWindowsContainerComponent, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, NgwWindowsContainerComponent, ActiveWindowsBarComponent],
-  providers: [
-    NgwWindowsManagerService
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [NgwWindowsContainerComponent, ActiveWindowsBarComponent],
+    providers: [
+        NgwWindowsManagerService
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
   constructor(public nwm: NgwWindowsManagerService,

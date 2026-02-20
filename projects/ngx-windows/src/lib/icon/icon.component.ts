@@ -1,4 +1,4 @@
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu';
@@ -9,8 +9,10 @@ export type NgwIconType = 'close' | 'minimize' | 'maximize' | 'restore' | 'menu'
   imports: [],
   templateUrl: './icon.component.html',
   styles: '',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 /**
  * @class IconComponent
  * @description Window icon component - contains all basic icon types for window topbar.

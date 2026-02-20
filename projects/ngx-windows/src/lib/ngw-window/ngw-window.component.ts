@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   DestroyRef,
   effect,
@@ -40,7 +41,8 @@ import {NgwWindowProps} from "../models/ngw-window-properties.model";
   ],
   templateUrl: './ngw-window.component.html',
   styles: '',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 /**
  * @class NgwWindowComponent

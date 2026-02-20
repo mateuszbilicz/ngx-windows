@@ -1,57 +1,61 @@
 import '@angular/compiler';
-import {Component, DestroyRef, effect, input, signal, ViewEncapsulation} from '@angular/core';
-import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal, ViewEncapsulation} from '@angular/core';
+import {takeUntilDestroyed, toObservable} from "@angular/core/rxjs-interop";
 import {CloseConfirmDialogComponent} from "../close-confirm-dialog/close-confirm-dialog.component";
-import {debounceTime} from "rxjs";
+import {debounceTime, filter, switchMap, take, tap} from "rxjs";
 import {NgwWindowControllerService, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
   selector: 'app-close-confirm-dialog-example',
-  standalone: true,
   imports: [],
   templateUrl: './close-confirm-dialog-example.component.html',
   styleUrl: './close-confirm-dialog-example.component.scss',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CloseConfirmDialogExampleComponent {
-
+  protected readonly nwm = inject(NgwWindowsManagerService);
+  protected readonly destroyRef = inject(DestroyRef);
   windowController = input.required<NgwWindowControllerService>();
   closeConfirmDialogComponent = CloseConfirmDialogComponent;
   closeConfirmWindowId: string | undefined = undefined;
   confirmClose = signal(false);
   closeLocked = signal(false);
 
-  constructor(private nwm: NgwWindowsManagerService,
-              private destroyRef: DestroyRef) {
-    let onThisWindowInit = effect(() => {
-      const winC = this.windowController();
-      winC.configurationSvc.setProperty('preventClose', true);
-      winC.onClose$
-        .pipe(
-          takeUntilDestroyed(this.destroyRef),
-          debounceTime(30)
-        )
-        .subscribe({
-          next: (ev: MouseEvent) => {
-            if (!this.closeLocked()) {
-              this.confirmClose.set(true);
-            }
-            const existing = this.nwm.getWindowById(this.closeConfirmWindowId!);
-            if (existing) {
-              this.nwm.activateWindow(this.closeConfirmWindowId!);
-              return;
-            }
-            this.createCloseConfirmWindow(ev);
-          }
-        });
-      onThisWindowInit.destroy();
-    }, {allowSignalWrites: true});
-    effect(() => {
-      if (this.confirmClose()) {
-        if (this.closeConfirmWindowId) this.nwm.removeWindow(this.closeConfirmWindowId!);
+  constructor() {
+    toObservable(this.windowController)
+      .pipe(
+        takeUntilDestroyed(),
+        filter(winC => !!winC),
+        take(1),
+        tap((winC) => {
+          winC.configurationSvc.setProperty('preventClose', true)
+        }),
+        switchMap((winC) =>
+          winC.onClose$
+        ),
+        debounceTime(30)
+      )
+      .subscribe((ev: MouseEvent) => {
+        if (!this.closeLocked()) {
+          this.confirmClose.set(true);
+        }
+        const existing = this.nwm.getWindowById(this.closeConfirmWindowId!);
+        if (existing) {
+          this.nwm.activateWindow(this.closeConfirmWindowId!);
+          return;
+        }
+        this.createCloseConfirmWindow(ev);
+      });
+    toObservable(this.confirmClose)
+      .pipe(
+        takeUntilDestroyed(),
+        filter(confirm => confirm),
+      )
+      .subscribe(() => {
+        if (this.closeConfirmWindowId) this.nwm.removeWindow(this.closeConfirmWindowId);
         this.nwm.removeWindow(this.windowController().id());
-      }
-    }, {allowSignalWrites: true});
+      });
   }
 
   createCloseConfirmWindow(ev: MouseEvent) {

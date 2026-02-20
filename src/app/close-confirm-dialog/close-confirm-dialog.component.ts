@@ -1,13 +1,13 @@
-import {Component, input, OnInit, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, OnInit, ViewEncapsulation} from '@angular/core';
 import {NgwWindowControllerService, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
   selector: 'app-close-confirm-dialog',
-  standalone: true,
   imports: [],
   templateUrl: './close-confirm-dialog.component.html',
   styleUrl: './close-confirm-dialog.component.scss',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CloseConfirmDialogComponent
   implements OnInit {

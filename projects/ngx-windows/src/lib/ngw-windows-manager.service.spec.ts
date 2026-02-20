@@ -5,24 +5,22 @@ import {NgwWindowsContainerComponent} from "./ngw-windows-container/ngw-windows-
 import {NgwWindowControllerService} from "./ngw-window/services/ngw-window-controller.service";
 
 @Component({
-  selector: 'app-test-win',
-  standalone: true,
-  imports: [],
-  template: '<span>Test window works!</span>',
-  styles: ''
+    selector: 'app-test-win',
+    imports: [],
+    template: '<span>Test window works!</span>',
+    styles: ''
 })
 export class TestWinComponent {
   windowController = input.required<NgwWindowControllerService>();
 }
 
 @Component({
-  selector: 'app-test-parent',
-  standalone: true,
-  imports: [
-    NgwWindowsContainerComponent
-  ],
-  template: '<ngw-windows-container/>',
-  styles: ''
+    selector: 'app-test-parent',
+    imports: [
+        NgwWindowsContainerComponent
+    ],
+    template: '<ngw-windows-container/>',
+    styles: ''
 })
 export class TestParentComponent {
   constructor(public manager: NgwWindowsManagerService) {}

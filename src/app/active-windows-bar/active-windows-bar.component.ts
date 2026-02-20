@@ -1,15 +1,15 @@
-import {Component, computed, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, ViewEncapsulation} from '@angular/core';
 import {ActiveNgwWindowProps, IconComponent, NgwWindowsManagerService} from "ngx-windows";
 
 @Component({
   selector: 'app-active-windows-bar',
-  standalone: true,
   imports: [
     IconComponent
   ],
   templateUrl: './active-windows-bar.component.html',
   styleUrl: './active-windows-bar.component.scss',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActiveWindowsBarComponent {
   windowsFiltered = computed(() =>
@@ -18,7 +18,8 @@ export class ActiveWindowsBarComponent {
   );
   activeWindow = computed(() => this.ngwWindowsManagerService.currentActiveWindow());
 
-  constructor(private ngwWindowsManagerService: NgwWindowsManagerService) {}
+  constructor(private ngwWindowsManagerService: NgwWindowsManagerService) {
+  }
 
   activateWindow(windowId: string) {
     if (this.ngwWindowsManagerService.currentActiveWindow()?.id === windowId) {
@@ -31,6 +32,4 @@ export class ActiveWindowsBarComponent {
   closeWindow(win: ActiveNgwWindowProps, ev: MouseEvent) {
     win.service?.close(ev);
   }
-
-  trackByWindowId = (index: number, win: ActiveNgwWindowProps) => win.id;
 }

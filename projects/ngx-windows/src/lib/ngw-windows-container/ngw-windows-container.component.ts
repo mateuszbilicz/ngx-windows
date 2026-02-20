@@ -1,6 +1,13 @@
-import {AfterViewInit, Component, DestroyRef, ElementRef, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  ElementRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {NgwWindowsManagerService} from "../ngw-windows-manager.service";
-import {AsyncPipe} from "@angular/common";
 import {NgwWindowComponent} from "../ngw-window/ngw-window.component";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {debounceTime, distinctUntilChanged, throttleTime} from "rxjs";
@@ -9,12 +16,12 @@ import {debounceTime, distinctUntilChanged, throttleTime} from "rxjs";
   selector: 'ngw-windows-container',
   standalone: true,
   imports: [
-    AsyncPipe,
     NgwWindowComponent
   ],
   templateUrl: './ngw-windows-container.component.html',
   styles: '',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgwWindowsContainerComponent
   implements AfterViewInit {
