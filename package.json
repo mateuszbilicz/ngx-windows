@@ -38,7 +38,7 @@
     "@angular/core": "^21.1.5",
     "@angular/forms": "^21.1.5",
     "@angular/platform-browser": "^21.1.5",
-    "@angular/platform-browser-dynamic": "^21.1.5",
+    "@angular/platform-browser-dynamic": "^21.2.0",
     "@angular/router": "^21.1.5",
     "ngx-windows": "file:ngx-windows-1.0.8.tgz",
     "rxjs": "~7.8.0",
