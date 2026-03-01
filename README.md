@@ -1,6 +1,6 @@
 # Angular Windows
 
-Angular version: 21.1.5
+Angular version: 21.2.0
 
 Previous versions of Angular aren't supported.
 
